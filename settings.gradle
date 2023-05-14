@@ -12,5 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "CCGOLivesAndroid"
+rootProject.name = "CSGOLivesAndroid"
 include ':app'

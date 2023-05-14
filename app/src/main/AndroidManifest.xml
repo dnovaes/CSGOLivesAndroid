@@ -9,7 +9,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.CCGOLivesAndroid"
+        android:theme="@style/Theme.CSGOLivesAndroid"
         tools:targetApi="31">
 
         <activity
@@ -17,7 +17,7 @@
             android:exported="true"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:theme="@style/Theme.CCGOLivesAndroid.NoActionBar">
+            android:theme="@style/Theme.CSGOLivesAndroid.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -28,7 +28,7 @@
             android:exported="true"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:theme="@style/Theme.CCGOLivesAndroid.NoActionBar">
+            android:theme="@style/Theme.CSGOLivesAndroid.NoActionBar">
         </activity>
     </application>
 
