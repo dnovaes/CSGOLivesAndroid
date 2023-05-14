@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.dnovaes.csgolive.common.ui.views.BaseFragment
 import com.dnovaes.csgolive.common.ui.viewstate.UIViewState
 import com.dnovaes.csgolive.databinding.FragmentMatchesBinding
 import com.dnovaes.csgolive.matches.common.ui.model.Matches
@@ -17,13 +17,7 @@ import com.dnovaes.csgolive.matches.summary.ui.model.isStartingLoadSummaryData
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MatchesSummaryFragment : Fragment() {
-
-    private var _binding: FragmentMatchesBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+class MatchesSummaryFragment : BaseFragment<FragmentMatchesBinding>() {
 
     private val viewModel: MatchesViewModel by viewModels()
 
@@ -44,17 +38,16 @@ class MatchesSummaryFragment : Fragment() {
         when {
             modelState.isStartingLoadSummaryData() -> viewModel.loadSummaryData()
             modelState.isProcessingLoadSummaryData() -> {
-                //show spinner
+                showLoadingSpinner()
             }
             modelState.isDoneLoadingSummaryData() -> {
-                //show data on the screen
+                hideLoadingSpinner()
                 binding.summaryMatches.text = modelState.result?.toString()
             }
         }
     }
 
     override fun onDestroyView() {
-        _binding = null
         viewModel.matchesLiveData.removeObserver(matchObserver)
         super.onDestroyView()
     }
