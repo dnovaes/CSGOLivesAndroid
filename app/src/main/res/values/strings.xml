@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">CCGOLivesAndroid</string>
+    <string name="summary_fragment_label">Matches Summary</string>
+</resources>
