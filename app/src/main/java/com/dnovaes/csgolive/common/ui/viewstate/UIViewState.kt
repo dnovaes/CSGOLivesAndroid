@@ -1,7 +1,7 @@
-package com.dnovaes.csgolive.matches.common.model.uiviewstate
+package com.dnovaes.csgolive.common.ui.viewstate
 
-import com.dnovaes.csgolive.matches.common.model.UIError
-import com.dnovaes.csgolive.matches.common.model.UIModelInterface
+import com.dnovaes.csgolive.matches.common.ui.model.UIError
+import com.dnovaes.csgolive.matches.common.ui.model.UIModelInterface
 
 open class UIViewState<T: UIModelInterface>(
     val state: UIDataStateInterface,

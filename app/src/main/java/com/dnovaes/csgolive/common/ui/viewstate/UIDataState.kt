@@ -1,6 +1,6 @@
-package com.dnovaes.csgolive.matches.common.model.uiviewstate
+package com.dnovaes.csgolive.common.ui.viewstate
 
-import com.dnovaes.csgolive.matches.common.model.UIModelInterface
+import com.dnovaes.csgolive.matches.common.ui.model.UIModelInterface
 
 interface UIDataStateInterface
 

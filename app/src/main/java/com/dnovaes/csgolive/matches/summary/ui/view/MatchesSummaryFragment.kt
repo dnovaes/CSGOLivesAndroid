@@ -1,4 +1,4 @@
-package com.dnovaes.csgolive.matches.summary
+package com.dnovaes.csgolive.matches.summary.ui.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,14 +7,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import com.dnovaes.csgolive.matches.common.model.uiviewstate.UIViewState
+import com.dnovaes.csgolive.common.ui.viewstate.UIViewState
 import com.dnovaes.csgolive.databinding.FragmentMatchesBinding
-import com.dnovaes.csgolive.matches.common.model.GameMatch
-import com.dnovaes.csgolive.matches.common.view.MatchesViewModel
-import com.dnovaes.csgolive.matches.summary.model.isDoneLoadingSummaryData
-import com.dnovaes.csgolive.matches.summary.model.isProcessingLoadSummaryData
-import com.dnovaes.csgolive.matches.summary.model.isStartingLoadSummaryData
-
+import com.dnovaes.csgolive.matches.common.ui.model.GameMatch
+import com.dnovaes.csgolive.matches.common.ui.view.MatchesViewModel
+import com.dnovaes.csgolive.matches.summary.ui.model.isDoneLoadingSummaryData
+import com.dnovaes.csgolive.matches.summary.ui.model.isProcessingLoadSummaryData
+import com.dnovaes.csgolive.matches.summary.ui.model.isStartingLoadSummaryData
 
 class MatchesSummaryFragment : Fragment() {
 

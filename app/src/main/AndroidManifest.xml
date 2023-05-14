@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".matches.common.view.MatchesActivity"
+            android:name=".matches.common.ui.view.MatchesActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:launchMode="singleTask"

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/summaryFragment"
-        android:name="com.dnovaes.csgolive.matches.summary.MatchesSummaryFragment"
+        android:name="com.dnovaes.csgolive.matches.summary.ui.view.MatchesSummaryFragment"
         android:label="@string/summary_fragment_label"
         tools:layout="@layout/fragment_matches">
     </fragment>

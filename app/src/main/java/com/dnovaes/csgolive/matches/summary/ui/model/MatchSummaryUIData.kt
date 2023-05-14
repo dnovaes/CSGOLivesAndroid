@@ -1,21 +1,21 @@
-package com.dnovaes.csgolive.matches.summary.model
+package com.dnovaes.csgolive.matches.summary.ui.model
 
-import com.dnovaes.csgolive.matches.common.model.GameMatch
-import com.dnovaes.csgolive.matches.common.model.uiviewstate.UIDataState
-import com.dnovaes.csgolive.matches.common.model.uiviewstate.UIViewState
+import com.dnovaes.csgolive.matches.common.ui.model.GameMatch
+import com.dnovaes.csgolive.common.ui.viewstate.UIDataState
+import com.dnovaes.csgolive.common.ui.viewstate.UIViewState
 
 // Check methods
 
 fun UIViewState<GameMatch>.isStartingLoadSummaryData() =
-    this.state == UIDataState.STARTED
+    this.state == com.dnovaes.csgolive.common.ui.viewstate.UIDataState.STARTED
             && this.process == MatchSummaryUIDataProcess.LOAD_SUMMARY_MATCH
 
 fun UIViewState<GameMatch>.isProcessingLoadSummaryData() =
-    this.state == UIDataState.PROCESSING
+    this.state == com.dnovaes.csgolive.common.ui.viewstate.UIDataState.PROCESSING
         && this.process == MatchSummaryUIDataProcess.LOAD_SUMMARY_MATCH
 
 fun UIViewState<GameMatch>.isDoneLoadingSummaryData() =
-    this.state == UIDataState.DONE
+    this.state == com.dnovaes.csgolive.common.ui.viewstate.UIDataState.DONE
             && this.process == MatchSummaryUIDataProcess.LOAD_SUMMARY_MATCH
 
 

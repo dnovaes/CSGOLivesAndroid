@@ -1,4 +1,4 @@
-package com.dnovaes.csgolive.matches.common.model
+package com.dnovaes.csgolive.matches.common.ui.model
 
 import androidx.annotation.StringRes
 import com.dnovaes.csgolive.R

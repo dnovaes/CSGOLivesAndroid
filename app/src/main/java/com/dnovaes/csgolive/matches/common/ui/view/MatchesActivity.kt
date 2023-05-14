@@ -1,4 +1,4 @@
-package com.dnovaes.csgolive.matches.common.view
+package com.dnovaes.csgolive.matches.common.ui.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

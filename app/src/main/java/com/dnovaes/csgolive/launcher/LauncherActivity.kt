@@ -6,7 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.activity.ComponentActivity
 import com.dnovaes.csgolive.databinding.ActivityMainBinding
-import com.dnovaes.csgolive.matches.common.view.MatchesActivity
+import com.dnovaes.csgolive.matches.common.ui.view.MatchesActivity
 
 class LauncherActivity: ComponentActivity() {
 
