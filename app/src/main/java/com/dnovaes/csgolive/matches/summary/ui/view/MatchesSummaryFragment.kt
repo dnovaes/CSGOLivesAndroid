@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.dnovaes.csgolive.common.ui.viewstate.UIViewState
 import com.dnovaes.csgolive.databinding.FragmentMatchesBinding
-import com.dnovaes.csgolive.matches.common.ui.model.GameMatch
+import com.dnovaes.csgolive.matches.common.ui.model.Matches
 import com.dnovaes.csgolive.matches.common.ui.view.MatchesViewModel
 import com.dnovaes.csgolive.matches.summary.ui.model.isDoneLoadingSummaryData
 import com.dnovaes.csgolive.matches.summary.ui.model.isProcessingLoadSummaryData
@@ -40,7 +40,7 @@ class MatchesSummaryFragment : Fragment() {
         bindElements()
     }
 
-    private val matchObserver: Observer<UIViewState<GameMatch>> = Observer { modelState ->
+    private val matchObserver: Observer<UIViewState<Matches>> = Observer { modelState ->
         when {
             modelState.isStartingLoadSummaryData() -> viewModel.loadSummaryData()
             modelState.isProcessingLoadSummaryData() -> {
@@ -48,6 +48,7 @@ class MatchesSummaryFragment : Fragment() {
             }
             modelState.isDoneLoadingSummaryData() -> {
                 //show data on the screen
+                binding.summaryMatches.text = modelState.result?.toString()
             }
         }
     }

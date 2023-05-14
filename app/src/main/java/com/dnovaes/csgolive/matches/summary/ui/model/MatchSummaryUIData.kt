@@ -1,27 +1,31 @@
 package com.dnovaes.csgolive.matches.summary.ui.model
 
-import com.dnovaes.csgolive.matches.common.ui.model.GameMatch
+import com.dnovaes.csgolive.matches.common.ui.model.Matches
 import com.dnovaes.csgolive.common.ui.viewstate.UIDataState
 import com.dnovaes.csgolive.common.ui.viewstate.UIViewState
 
 // Check methods
 
-fun UIViewState<GameMatch>.isStartingLoadSummaryData() =
-    this.state == com.dnovaes.csgolive.common.ui.viewstate.UIDataState.STARTED
+fun UIViewState<Matches>.isStartingLoadSummaryData() =
+    this.state == UIDataState.STARTED
             && this.process == MatchSummaryUIDataProcess.LOAD_SUMMARY_MATCH
 
-fun UIViewState<GameMatch>.isProcessingLoadSummaryData() =
-    this.state == com.dnovaes.csgolive.common.ui.viewstate.UIDataState.PROCESSING
+fun UIViewState<Matches>.isProcessingLoadSummaryData() =
+    this.state == UIDataState.PROCESSING
         && this.process == MatchSummaryUIDataProcess.LOAD_SUMMARY_MATCH
 
-fun UIViewState<GameMatch>.isDoneLoadingSummaryData() =
-    this.state == com.dnovaes.csgolive.common.ui.viewstate.UIDataState.DONE
+fun UIViewState<Matches>.isDoneLoadingSummaryData() =
+    this.state == UIDataState.DONE
             && this.process == MatchSummaryUIDataProcess.LOAD_SUMMARY_MATCH
 
 
 // Assigning methods
 
-fun UIViewState<GameMatch>.asProcessingSummaryData() = UIViewState<GameMatch>(
+fun UIViewState<Matches>.asProcessingSummaryData() = UIViewState<Matches>(
     process = MatchSummaryUIDataProcess.LOAD_SUMMARY_MATCH,
     state = UIDataState.PROCESSING
+)
+fun UIViewState<Matches>.asLoadedSummaryData() = UIViewState<Matches>(
+    process = MatchSummaryUIDataProcess.LOAD_SUMMARY_MATCH,
+    state = UIDataState.DONE
 )
