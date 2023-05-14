@@ -29,6 +29,10 @@ class MatchesViewModel @Inject constructor(
     private val _matchesLiveData: MutableLiveData<UIViewState<Matches>> = MutableLiveData(matchState)
     val matchesLiveData: LiveData<UIViewState<Matches>> = _matchesLiveData
 
+    fun refreshSummaryMatches() {
+        loadSummaryData()
+    }
+
     fun loadSummaryData() {
         matchState = matchState
             .asProcessingSummaryData()

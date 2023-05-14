@@ -38,9 +38,12 @@ class MatchesSummaryFragment : BaseFragment<FragmentMatchesBinding>() {
         when {
             modelState.isStartingLoadSummaryData() -> viewModel.loadSummaryData()
             modelState.isProcessingLoadSummaryData() -> {
-                showLoadingSpinner()
+                if (!binding.summarySwipeRefreshLayout.isRefreshing) {
+                    showLoadingSpinner()
+                }
             }
             modelState.isDoneLoadingSummaryData() -> {
+                binding.summarySwipeRefreshLayout.isRefreshing = false
                 hideLoadingSpinner()
                 binding.summaryMatches.text = modelState.result?.toString()
             }
@@ -54,5 +57,8 @@ class MatchesSummaryFragment : BaseFragment<FragmentMatchesBinding>() {
 
     private fun bindElements() {
         viewModel.matchesLiveData.observe(viewLifecycleOwner, matchObserver)
+        binding.summarySwipeRefreshLayout.setOnRefreshListener {
+            viewModel.refreshSummaryMatches()
+        }
     }
 }
