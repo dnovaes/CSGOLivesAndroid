@@ -10,10 +10,13 @@ import com.dnovaes.csgolive.common.ui.viewstate.UIDataState
 import com.dnovaes.csgolive.matches.summary.data.MatchesRepository
 import com.dnovaes.csgolive.matches.summary.ui.model.MatchSummaryUIDataProcess
 import com.dnovaes.csgolive.matches.summary.ui.model.asProcessingSummaryData
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.launch
 
-class MatchesViewModel(
-    //private val matchesRepository: MatchesRepository
+@HiltViewModel
+class MatchesViewModel @Inject constructor(
+    private val matchesRepository: MatchesRepository
 ): ViewModel() {
 
     private var matchState = UIViewState<GameMatch>(

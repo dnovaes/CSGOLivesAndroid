@@ -14,7 +14,9 @@ import com.dnovaes.csgolive.matches.common.ui.view.MatchesViewModel
 import com.dnovaes.csgolive.matches.summary.ui.model.isDoneLoadingSummaryData
 import com.dnovaes.csgolive.matches.summary.ui.model.isProcessingLoadSummaryData
 import com.dnovaes.csgolive.matches.summary.ui.model.isStartingLoadSummaryData
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MatchesSummaryFragment : Fragment() {
 
     private var _binding: FragmentMatchesBinding? = null

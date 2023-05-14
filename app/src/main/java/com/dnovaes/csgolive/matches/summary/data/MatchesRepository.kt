@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
 class MatchesRepository(
-    private val pandaScoreAPI: PandaScoreAPIInterface,
     private val dispatcher: DispatcherInterface
 ) {
 
