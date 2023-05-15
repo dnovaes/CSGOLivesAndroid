@@ -18,7 +18,6 @@ class LauncherActivity: ComponentActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.txtViewMain.text = this@LauncherActivity::class.java.simpleName
     }
 
     override fun onStart() {

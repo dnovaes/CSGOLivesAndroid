@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="summary_matches_title_height">40dp</dimen>
+    <dimen name="img_fuze_splash_size">113dp</dimen>
 </resources>
