@@ -6,10 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.dnovaes.csgolive.common.ui.views.BaseFragment
 import com.dnovaes.csgolive.common.ui.viewstate.UIViewState
 import com.dnovaes.csgolive.databinding.FragmentMatchesBinding
+import com.dnovaes.csgolive.matches.common.data.model.MatchResponse
 import com.dnovaes.csgolive.matches.common.ui.model.Matches
+import com.dnovaes.csgolive.matches.common.ui.view.MatchesAdapter
 import com.dnovaes.csgolive.matches.common.ui.view.MatchesViewModel
 import com.dnovaes.csgolive.matches.summary.ui.model.isDoneLoadingSummaryData
 import com.dnovaes.csgolive.matches.summary.ui.model.isProcessingLoadSummaryData
@@ -45,7 +48,9 @@ class MatchesSummaryFragment : BaseFragment<FragmentMatchesBinding>() {
             modelState.isDoneLoadingSummaryData() -> {
                 binding.summarySwipeRefreshLayout.isRefreshing = false
                 hideLoadingSpinner()
-                binding.summaryMatches.text = modelState.result?.toString()
+                modelState.result?.let { matches ->
+                    updatesRecyclerView(matches.data)
+                }
             }
         }
     }
@@ -60,5 +65,18 @@ class MatchesSummaryFragment : BaseFragment<FragmentMatchesBinding>() {
         binding.summarySwipeRefreshLayout.setOnRefreshListener {
             viewModel.refreshSummaryMatches()
         }
+        bindRecyclerView()
+    }
+
+    private fun bindRecyclerView() {
+        val matchesAdapter = MatchesAdapter(emptyList())
+        binding.summaryRecyclerView.let { recyclerView ->
+            recyclerView.adapter = matchesAdapter
+            recyclerView.layoutManager = LinearLayoutManager(this.context)
+        }
+    }
+
+    private fun updatesRecyclerView(matches: List<MatchResponse>) {
+        (binding.summaryRecyclerView.adapter as? MatchesAdapter)?.update(matches)
     }
 }

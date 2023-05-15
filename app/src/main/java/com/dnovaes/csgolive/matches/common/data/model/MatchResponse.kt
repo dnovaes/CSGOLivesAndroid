@@ -17,6 +17,10 @@ data class MatchResponse(
     val opponents: List<MatchOpponentGroupResponse>,
 )
 
+fun List<MatchOpponentGroupResponse>.getItemNameOrDefault(pos: Int): String {
+    return this.getOrNull(pos)?.opponent?.name ?: "Team name not assigned"
+}
+
 @kotlinx.serialization.Serializable
 data class MatchLeagueResponse (
     val id: Long,
@@ -26,14 +30,14 @@ data class MatchLeagueResponse (
 
 @kotlinx.serialization.Serializable
 data class MatchSerieResponse(
-   val name: String,
+   val name: String?,
    @SerialName("full_name") val fullName: String
 )
 
 @kotlinx.serialization.Serializable
 data class MatchVideoGameResponse(
     val id: Long,
-    val name: String,
+    val name: MatchGameName,
     val slug: String
 )
 

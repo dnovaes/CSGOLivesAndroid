@@ -15,7 +15,7 @@ class MatchesRepository(
     fun requestMatchesList(): Flow<Result<List<MatchResponse>>> {
         return flow {
             runCatching {
-                api.getMatchesList()
+                api.getMatchesList("3")
             }.onFailure {
                 println("logd MatchesList - onFailure) cause: ${it.cause}\n\tmessage: ${it.message}\n")
                 println("logd MatchesList - onFailure) stackTrace: ${it.stackTrace.first()}")
