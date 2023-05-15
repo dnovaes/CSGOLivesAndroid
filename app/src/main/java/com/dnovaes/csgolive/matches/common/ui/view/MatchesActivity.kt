@@ -14,7 +14,6 @@ class MatchesActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMatchesBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.txtViewMain.text = MatchesActivity::class.java.simpleName
     }
 
 }
