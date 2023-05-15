@@ -1,8 +1,9 @@
 package com.dnovaes.csgolive.matches.common.ui.view
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.LinearLayout
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dnovaes.csgolive.R
@@ -18,14 +19,23 @@ class MatchesAdapter(
             R.layout.recycler_view_match_layout_item,
             parent,
             false
-        ) as LinearLayout
+        ) as ViewGroup
         return MatchesItemViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: MatchesItemViewHolder, position: Int) {
         val item = matches[position]
-        holder.team1TitleView.text = item.opponents.getItemNameOrDefault(0)
-        holder.team2TitleView.text = item.opponents.getItemNameOrDefault(1)
+        item.league.imageUrl?.let {
+            holder.leagueImgLogoView.setImageURI(Uri.parse(it))
+        }
+        holder.matchTimeTextView.text = item.beginAt
+        //holder.matchTimeBackgroundView.text = item.beginAt
+
+        holder.team1TextView.text = item.opponents.getItemNameOrDefault(0)
+        holder.team2TextView.text = item.opponents.getItemNameOrDefault(1)
+
+        holder.leagueTitleView.text = item.league.name
+        holder.serieTitleView.text = " - ${item.serie.name}"
     }
 
     fun update(items: List<MatchResponse>) {
@@ -39,7 +49,14 @@ class MatchesAdapter(
 
 }
 
-class MatchesItemViewHolder(itemLayout: LinearLayout) : RecyclerView.ViewHolder(itemLayout) {
-    val team1TitleView: TextView = itemLayout.findViewById(R.id.match_team1_title)
-    val team2TitleView: TextView = itemLayout.findViewById(R.id.match_team2_title)
+class MatchesItemViewHolder(itemLayout: ViewGroup) : RecyclerView.ViewHolder(itemLayout) {
+    val matchTimeTextView: TextView = itemLayout.findViewById(R.id.match_time_textview)
+    val matchTimeBackgroundView: ImageView = itemLayout.findViewById(R.id.match_time_background_img)
+
+    val team1TextView: TextView = itemLayout.findViewById(R.id.match_team1_textview)
+    val team2TextView: TextView = itemLayout.findViewById(R.id.match_team2_textview)
+
+    val leagueImgLogoView: ImageView = itemLayout.findViewById(R.id.match_league_logo_img)
+    val leagueTitleView: TextView = itemLayout.findViewById(R.id.match_league_title)
+    val serieTitleView: TextView = itemLayout.findViewById(R.id.match_serie_title)
 }
