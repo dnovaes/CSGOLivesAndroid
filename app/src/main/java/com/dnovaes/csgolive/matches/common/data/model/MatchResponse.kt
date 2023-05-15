@@ -21,6 +21,9 @@ fun List<MatchOpponentGroupResponse>.getItemNameOrDefault(pos: Int): String {
     return this.getOrNull(pos)?.opponent?.name ?: "Team name not assigned"
 }
 
+fun List<MatchOpponentGroupResponse>.getImageUrlOrNull(pos: Int)
+    = getOrNull(pos)?.opponent?.imageUrl
+
 @kotlinx.serialization.Serializable
 data class MatchLeagueResponse (
     val id: Long,

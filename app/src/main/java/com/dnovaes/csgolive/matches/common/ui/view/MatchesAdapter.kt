@@ -1,13 +1,16 @@
 package com.dnovaes.csgolive.matches.common.ui.view
 
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.dnovaes.csgolive.R
+import com.dnovaes.csgolive.matches.common.data.model.MatchLeagueResponse
+import com.dnovaes.csgolive.matches.common.data.model.MatchOpponentGroupResponse
 import com.dnovaes.csgolive.matches.common.data.model.MatchResponse
+import com.dnovaes.csgolive.matches.common.data.model.getImageUrlOrNull
 import com.dnovaes.csgolive.matches.common.data.model.getItemNameOrDefault
 
 class MatchesAdapter(
@@ -25,18 +28,16 @@ class MatchesAdapter(
 
     override fun onBindViewHolder(holder: MatchesItemViewHolder, position: Int) {
         val item = matches[position]
-        item.league.imageUrl?.let {
-            holder.leagueImgLogoView.setImageURI(Uri.parse(it))
+
+        holder.bindLeagueInfo(item.league) {
+            notifyItemChanged(position)
         }
         holder.matchTimeTextView.text = item.beginAt
         //holder.matchTimeBackgroundView.text = item.beginAt
-
-        holder.team1TextView.text = item.opponents.getItemNameOrDefault(0)
-        holder.team2TextView.text = item.opponents.getItemNameOrDefault(1)
-
-        holder.leagueTitleView.text = item.league.name
+        holder.bindTeamInformation(item.opponents)
         holder.serieTitleView.text = " - ${item.serie.name}"
     }
+
 
     fun update(items: List<MatchResponse>) {
         this.matches = items
@@ -49,14 +50,44 @@ class MatchesAdapter(
 
 }
 
-class MatchesItemViewHolder(itemLayout: ViewGroup) : RecyclerView.ViewHolder(itemLayout) {
+class MatchesItemViewHolder(private val itemLayout: ViewGroup) : RecyclerView.ViewHolder(itemLayout) {
     val matchTimeTextView: TextView = itemLayout.findViewById(R.id.match_time_textview)
     val matchTimeBackgroundView: ImageView = itemLayout.findViewById(R.id.match_time_background_img)
 
-    val team1TextView: TextView = itemLayout.findViewById(R.id.match_team1_textview)
-    val team2TextView: TextView = itemLayout.findViewById(R.id.match_team2_textview)
+    private val team1TextView: TextView = itemLayout.findViewById(R.id.match_team1_textview)
+    private val team1ImgView: ImageView = itemLayout.findViewById(R.id.match_team1_imgview)
+    private val team2TextView: TextView = itemLayout.findViewById(R.id.match_team2_textview)
+    private val team2ImgView: ImageView = itemLayout.findViewById(R.id.match_team2_imgview)
 
-    val leagueImgLogoView: ImageView = itemLayout.findViewById(R.id.match_league_logo_img)
-    val leagueTitleView: TextView = itemLayout.findViewById(R.id.match_league_title)
+    private val leagueTitleView: TextView = itemLayout.findViewById(R.id.match_league_title)
+    private val leagueImgLogoView: ImageView = itemLayout.findViewById(R.id.match_league_logo_img)
     val serieTitleView: TextView = itemLayout.findViewById(R.id.match_serie_title)
+
+    fun bindLeagueInfo(league: MatchLeagueResponse, onImageLoaded: () -> Unit) {
+        leagueTitleView.text = league.name
+        league.imageUrl?.let { url ->
+            leagueImgLogoView.load(url) {
+                crossfade(true)
+                error(R.drawable.match_img_placeholder)
+            }
+        } ?: leagueImgLogoView.load(R.drawable.match_img_placeholder)
+    }
+
+    fun bindTeamInformation(opponents: List<MatchOpponentGroupResponse>) {
+        team1TextView.text = opponents.getItemNameOrDefault(0)
+        opponents.getImageUrlOrNull(0)?.let { url ->
+            team1ImgView.load(url) {
+                crossfade(true)
+                error(R.drawable.match_img_placeholder)
+            }
+        } ?: team1ImgView.load(R.drawable.match_img_placeholder)
+
+        team2TextView.text = opponents.getItemNameOrDefault(1)
+        opponents.getImageUrlOrNull(1)?.let { url ->
+            team2ImgView.load(url) {
+                crossfade(true)
+                error(R.drawable.match_img_placeholder)
+            }
+        }?: team2ImgView.load(R.drawable.match_img_placeholder)
+    }
 }
