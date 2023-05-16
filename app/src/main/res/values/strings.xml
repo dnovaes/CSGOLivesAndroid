@@ -4,4 +4,5 @@
     <string name="default_ui_error_message">Unable to process your request, Please try later.</string>
     <string name="summary_matches_title">Partidas</string>
     <string name="match_vs">vs</string>
+    <string name="now">Agora</string>
 </resources>

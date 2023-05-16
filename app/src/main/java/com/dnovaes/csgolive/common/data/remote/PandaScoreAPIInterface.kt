@@ -14,7 +14,10 @@ interface PandaScoreAPIInterface{
     @GET("/matches/")
     suspend fun getMatchesList(
         @Query("filter[videogame]") filterGameId: String,
+        //@Query("filter[status]") status: String = "running",
         @Query("sort") sort: String,
+        @Query("page") page: Int = 1,
+        @Query("per_page") perPage: Int = 50,
     ): List<MatchResponse>
 
     /*

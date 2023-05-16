@@ -14,7 +14,7 @@ data class MatchResponse(
     @SerialName("begin_at") val beginAt: LocalDateTime,
     @SerialName("end_at") val endAt: String?,
     @SerialName("tournament_id") val tournamentId: Long,
-    val status: String,
+    val status: MatchGameStatus,
     @SerialName("winner_id") val winnerId: Long?,
     val league: MatchLeagueResponse,
     val serie: MatchSerieResponse,

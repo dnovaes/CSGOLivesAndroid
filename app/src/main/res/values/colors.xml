@@ -8,7 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="match_vs_text_color">#80FFFFFF</color>
-    <color name="match_time_background_color_now">#ffff0000</color>
+    <color name="match_time_background_color_now">#f42A35</color>
     <color name="match_time_background_color_scheduled">#33FAFAFA</color>
     <color name="csgoliveapp_background_color">#161621</color>
     <color name="summary_match_card_color">#272639</color>

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.dnovaes.csgolive.R
 import com.dnovaes.csgolive.common.utilities.extensions.getSummaryMatchTime
+import com.dnovaes.csgolive.matches.common.data.model.MatchGameStatus
 import com.dnovaes.csgolive.matches.common.data.model.MatchLeagueResponse
 import com.dnovaes.csgolive.matches.common.data.model.MatchOpponentGroupResponse
 import com.dnovaes.csgolive.matches.common.data.model.MatchResponse
@@ -33,10 +34,7 @@ class MatchesAdapter(
         val item = matches[position]
 
         holder.bindLeagueInfo(item.league)
-        val zoneDateTime = item.beginAt.atZone(ZoneId.of("UTC"))
-            .withZoneSameInstant(ZoneId.systemDefault())
-        holder.matchTimeTextView.text = zoneDateTime.getSummaryMatchTime()
-        //holder.matchTimeBackgroundView
+        holder.bindTimeInfo(item)
         holder.bindTeamInfo(item.opponents)
         holder.bindSerieInfo(item.serie)
     }
@@ -54,8 +52,8 @@ class MatchesAdapter(
 }
 
 class MatchesItemViewHolder(private val itemLayout: ViewGroup) : RecyclerView.ViewHolder(itemLayout) {
-    val matchTimeTextView: TextView = itemLayout.findViewById(R.id.match_time_textview)
-    val matchTimeBackgroundView: ImageView = itemLayout.findViewById(R.id.match_time_background_img)
+    private val matchTimeTextView: TextView = itemLayout.findViewById(R.id.match_time_textview)
+    private val matchTimeBackgroundView: ImageView = itemLayout.findViewById(R.id.match_time_background_img)
 
     private val team1TextView: TextView = itemLayout.findViewById(R.id.match_team1_textview)
     private val team1ImgView: ImageView = itemLayout.findViewById(R.id.match_team1_imgview)
@@ -92,6 +90,20 @@ class MatchesItemViewHolder(private val itemLayout: ViewGroup) : RecyclerView.Vi
                 error(R.drawable.match_img_placeholder)
             }
         }?: team2ImgView.load(R.drawable.match_img_placeholder)
+    }
+
+    fun bindTimeInfo(item: MatchResponse) {
+        val context = itemLayout.context
+        if (item.status == MatchGameStatus.RUNNING) {
+            matchTimeTextView.text = context.getString(R.string.now).uppercase()
+            matchTimeBackgroundView.setBackgroundColor(
+                context.resources.getColor(R.color.match_time_background_color_now)
+            )
+        } else {
+            val zoneDateTime = item.beginAt.atZone(ZoneId.of("UTC"))
+                .withZoneSameInstant(ZoneId.systemDefault())
+            matchTimeTextView.text = zoneDateTime.getSummaryMatchTime()
+        }
     }
 
     fun bindSerieInfo(serie: MatchSerieResponse) {
