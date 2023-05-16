@@ -11,7 +11,7 @@
 
     <ImageView
         android:id="@+id/match_time_background_img"
-        android:layout_width="43dp"
+        android:layout_width="58dp"
         android:layout_height="0dp"
         android:background="@color/match_time_background_color_scheduled"
         app:layout_constraintTop_toTopOf="parent"
@@ -22,7 +22,7 @@
         android:id="@+id/match_time_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="22.04 15:00"
+        tools:text="Hoje, 15:00"
         android:textSize="@dimen/match_time_text_size"
         android:textColor="@color/white"
         android:fontFamily="@font/roboto_medium"

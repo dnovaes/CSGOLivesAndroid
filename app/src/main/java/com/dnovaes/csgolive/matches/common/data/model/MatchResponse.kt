@@ -1,12 +1,17 @@
 package com.dnovaes.csgolive.matches.common.data.model
 
+import com.dnovaes.csgolive.common.utilities.serializers.LocalDateTimeSerializer
+import java.time.LocalDateTime
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@kotlinx.serialization.Serializable
+@Serializable
 data class MatchResponse(
     val id: Long,
     val name: String?,
-    @SerialName("begin_at") val beginAt: String,
+    @Contextual
+    @SerialName("begin_at") val beginAt: LocalDateTime,
     @SerialName("end_at") val endAt: String?,
     @SerialName("tournament_id") val tournamentId: Long,
     val status: String,

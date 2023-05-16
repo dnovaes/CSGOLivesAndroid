@@ -6,15 +6,18 @@ import com.dnovaes.csgolive.common.data.remote.PANDASCORE_SERVICE_URL
 import com.dnovaes.csgolive.common.data.remote.PandaScoreAPIInterface
 import com.dnovaes.csgolive.common.data.remote.interceptor.AuthInterceptor
 import com.dnovaes.csgolive.common.data.remote.interceptor.AuthInterceptorInterface
+import com.dnovaes.csgolive.common.utilities.serializers.LocalDateTimeSerializer
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import java.time.LocalDateTime
 import java.util.concurrent.TimeUnit
 import javax.inject.Named
 import javax.inject.Singleton
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -49,7 +52,12 @@ class NetworkModule {
 
     @Provides
     fun providesJsonKotlinSerializationConfig(): Json {
-        return Json { ignoreUnknownKeys = true }
+        return Json {
+            serializersModule = SerializersModule {
+                contextual(LocalDateTime::class, LocalDateTimeSerializer)
+            }
+            ignoreUnknownKeys = true
+        }
     }
 
     @Named(PANDA_RETROFIT)

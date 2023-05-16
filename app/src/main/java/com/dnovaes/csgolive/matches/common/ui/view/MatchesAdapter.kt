@@ -7,11 +7,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.dnovaes.csgolive.R
+import com.dnovaes.csgolive.common.utilities.extensions.getSummaryMatchTime
 import com.dnovaes.csgolive.matches.common.data.model.MatchLeagueResponse
 import com.dnovaes.csgolive.matches.common.data.model.MatchOpponentGroupResponse
 import com.dnovaes.csgolive.matches.common.data.model.MatchResponse
 import com.dnovaes.csgolive.matches.common.data.model.getImageUrlOrNull
 import com.dnovaes.csgolive.matches.common.data.model.getItemNameOrDefault
+import java.time.ZoneId
 
 class MatchesAdapter(
     private var matches: List<MatchResponse>
@@ -32,8 +34,10 @@ class MatchesAdapter(
         holder.bindLeagueInfo(item.league) {
             notifyItemChanged(position)
         }
-        holder.matchTimeTextView.text = item.beginAt
-        //holder.matchTimeBackgroundView.text = item.beginAt
+        val zoneDateTime = item.beginAt.atZone(ZoneId.of("UTC"))
+            .withZoneSameInstant(ZoneId.systemDefault())
+        holder.matchTimeTextView.text = zoneDateTime.getSummaryMatchTime()
+        //holder.matchTimeBackgroundView
         holder.bindTeamInformation(item.opponents)
         holder.serieTitleView.text = " - ${item.serie.name}"
     }
