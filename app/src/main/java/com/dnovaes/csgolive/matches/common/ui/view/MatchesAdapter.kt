@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.dnovaes.csgolive.R
@@ -109,8 +110,8 @@ class MatchesItemViewHolder(private val itemLayout: ViewGroup) : RecyclerView.Vi
     private fun bindTimeNowEffect() {
         val context = itemLayout.context
         matchTimeTextView.text = context.getString(R.string.now).uppercase()
-        matchTimeBackgroundView.setBackgroundColor(
-            context.resources.getColor(R.color.match_time_background_color_now)
+        matchTimeBackgroundView.setImageDrawable(
+            ContextCompat.getDrawable(context, R.drawable.match_time_background_now)
         )
     }
 
