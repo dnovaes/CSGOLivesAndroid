@@ -11,6 +11,7 @@ import com.dnovaes.csgolive.common.utilities.extensions.getSummaryMatchTime
 import com.dnovaes.csgolive.matches.common.data.model.MatchLeagueResponse
 import com.dnovaes.csgolive.matches.common.data.model.MatchOpponentGroupResponse
 import com.dnovaes.csgolive.matches.common.data.model.MatchResponse
+import com.dnovaes.csgolive.matches.common.data.model.MatchSerieResponse
 import com.dnovaes.csgolive.matches.common.data.model.getImageUrlOrNull
 import com.dnovaes.csgolive.matches.common.data.model.getItemNameOrDefault
 import java.time.ZoneId
@@ -31,15 +32,13 @@ class MatchesAdapter(
     override fun onBindViewHolder(holder: MatchesItemViewHolder, position: Int) {
         val item = matches[position]
 
-        holder.bindLeagueInfo(item.league) {
-            notifyItemChanged(position)
-        }
+        holder.bindLeagueInfo(item.league)
         val zoneDateTime = item.beginAt.atZone(ZoneId.of("UTC"))
             .withZoneSameInstant(ZoneId.systemDefault())
         holder.matchTimeTextView.text = zoneDateTime.getSummaryMatchTime()
         //holder.matchTimeBackgroundView
-        holder.bindTeamInformation(item.opponents)
-        holder.serieTitleView.text = " - ${item.serie.name}"
+        holder.bindTeamInfo(item.opponents)
+        holder.bindSerieInfo(item.serie)
     }
 
 
@@ -65,9 +64,9 @@ class MatchesItemViewHolder(private val itemLayout: ViewGroup) : RecyclerView.Vi
 
     private val leagueTitleView: TextView = itemLayout.findViewById(R.id.match_league_title)
     private val leagueImgLogoView: ImageView = itemLayout.findViewById(R.id.match_league_logo_img)
-    val serieTitleView: TextView = itemLayout.findViewById(R.id.match_serie_title)
+    private val serieTitleView: TextView = itemLayout.findViewById(R.id.match_serie_title)
 
-    fun bindLeagueInfo(league: MatchLeagueResponse, onImageLoaded: () -> Unit) {
+    fun bindLeagueInfo(league: MatchLeagueResponse) {
         leagueTitleView.text = league.name
         league.imageUrl?.let { url ->
             leagueImgLogoView.load(url) {
@@ -77,7 +76,7 @@ class MatchesItemViewHolder(private val itemLayout: ViewGroup) : RecyclerView.Vi
         } ?: leagueImgLogoView.load(R.drawable.match_img_placeholder)
     }
 
-    fun bindTeamInformation(opponents: List<MatchOpponentGroupResponse>) {
+    fun bindTeamInfo(opponents: List<MatchOpponentGroupResponse>) {
         team1TextView.text = opponents.getItemNameOrDefault(0)
         opponents.getImageUrlOrNull(0)?.let { url ->
             team1ImgView.load(url) {
@@ -93,5 +92,13 @@ class MatchesItemViewHolder(private val itemLayout: ViewGroup) : RecyclerView.Vi
                 error(R.drawable.match_img_placeholder)
             }
         }?: team2ImgView.load(R.drawable.match_img_placeholder)
+    }
+
+    fun bindSerieInfo(serie: MatchSerieResponse) {
+        serie.name?.let {
+            serieTitleView.text = " - ${serie.name}"
+        } ?: run {
+            serieTitleView.text = ""
+        }
     }
 }
