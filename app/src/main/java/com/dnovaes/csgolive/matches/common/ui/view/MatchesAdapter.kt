@@ -7,7 +7,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.dnovaes.csgolive.R
+import com.dnovaes.csgolive.common.utilities.Constants
 import com.dnovaes.csgolive.common.utilities.extensions.getSummaryMatchTime
+import com.dnovaes.csgolive.common.utilities.extensions.getTodaysSummaryTimeLabel
+import com.dnovaes.csgolive.common.utilities.extensions.getWeekdaySummaryTimeLabel
+import com.dnovaes.csgolive.common.utilities.extensions.isSameWeek
 import com.dnovaes.csgolive.matches.common.data.model.MatchGameStatus
 import com.dnovaes.csgolive.matches.common.data.model.MatchLeagueResponse
 import com.dnovaes.csgolive.matches.common.data.model.MatchOpponentGroupResponse
@@ -15,6 +19,8 @@ import com.dnovaes.csgolive.matches.common.data.model.MatchResponse
 import com.dnovaes.csgolive.matches.common.data.model.MatchSerieResponse
 import com.dnovaes.csgolive.matches.common.data.model.getImageUrlOrNull
 import com.dnovaes.csgolive.matches.common.data.model.getItemNameOrDefault
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.ZoneId
 
 class MatchesAdapter(
@@ -93,16 +99,34 @@ class MatchesItemViewHolder(private val itemLayout: ViewGroup) : RecyclerView.Vi
     }
 
     fun bindTimeInfo(item: MatchResponse) {
-        val context = itemLayout.context
         if (item.status == MatchGameStatus.RUNNING) {
-            matchTimeTextView.text = context.getString(R.string.now).uppercase()
-            matchTimeBackgroundView.setBackgroundColor(
-                context.resources.getColor(R.color.match_time_background_color_now)
-            )
+            bindTimeNowEffect()
         } else {
-            val zoneDateTime = item.beginAt.atZone(ZoneId.of("UTC"))
-                .withZoneSameInstant(ZoneId.systemDefault())
-            matchTimeTextView.text = zoneDateTime.getSummaryMatchTime()
+            bindTimeInfoByWeekDay(item.beginAt)
+        }
+    }
+
+    private fun bindTimeNowEffect() {
+        val context = itemLayout.context
+        matchTimeTextView.text = context.getString(R.string.now).uppercase()
+        matchTimeBackgroundView.setBackgroundColor(
+            context.resources.getColor(R.color.match_time_background_color_now)
+        )
+    }
+
+    private fun bindTimeInfoByWeekDay(beginAt: LocalDateTime) {
+        when {
+            (beginAt.toLocalDate() == LocalDate.now()) -> {
+                matchTimeTextView.text = beginAt.getTodaysSummaryTimeLabel(itemLayout.context)
+            }
+            beginAt.toLocalDate().isSameWeek(LocalDate.now()) -> {
+                matchTimeTextView.text = beginAt.getWeekdaySummaryTimeLabel(itemLayout.context)
+            }
+            else -> {
+                val zoneDateTime = beginAt.atZone(ZoneId.of(Constants.ZoneId.UTC))
+                    .withZoneSameInstant(ZoneId.systemDefault())
+                matchTimeTextView.text = zoneDateTime.getSummaryMatchTime()
+            }
         }
     }
 

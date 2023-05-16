@@ -5,4 +5,12 @@
     <string name="summary_matches_title">Partidas</string>
     <string name="match_vs">vs</string>
     <string name="now">Agora</string>
+    <string name="today">Hoje</string>
+    <string name="monday">Segunda</string>
+    <string name="tuesday">Terca</string>
+    <string name="wednesday">Quarta</string>
+    <string name="thursday">Quinta</string>
+    <string name="friday">Sexta</string>
+    <string name="saturday">Sabado</string>
+    <string name="sunday">Sunday</string>
 </resources>

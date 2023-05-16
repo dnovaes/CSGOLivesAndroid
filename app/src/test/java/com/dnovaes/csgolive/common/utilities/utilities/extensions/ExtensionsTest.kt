@@ -1,6 +1,8 @@
 package com.dnovaes.csgolive.common.utilities.utilities.extensions
 
+import com.dnovaes.csgolive.common.utilities.Constants
 import com.dnovaes.csgolive.common.utilities.extensions.getSummaryMatchTime
+import com.dnovaes.csgolive.common.utilities.extensions.isSameWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -28,12 +30,12 @@ class ExtensionsTest {
             ZonedDateTime.of(
                 LocalDate.of(2023, 5, 6),
                 LocalTime.of(2, 9, 8),
-                ZoneId.of("UTC")
+                ZoneId.of(Constants.ZoneId.UTC)
             ).withZoneSameInstant(ZoneId.of("Europe/London")),
             ZonedDateTime.of(
                 LocalDate.of(2023, 5, 6),
                 LocalTime.of(2, 9, 8),
-                ZoneId.of("UTC")
+                ZoneId.of(Constants.ZoneId.UTC)
             ).withZoneSameInstant(ZoneId.of("America/New_York")),
             LocalDateTime.of(2023, 4, 11, 23, 1)
                 .atZone(ZoneId.of("Europe/London"))
@@ -50,6 +52,50 @@ class ExtensionsTest {
         input.forEachIndexed { i, zonedDateTime ->
             println("Comparing expected `${expected[i]}` with ${zonedDateTime.getSummaryMatchTime()}")
            assertEquals(expected[i], zonedDateTime.getSummaryMatchTime())
+        }
+    }
+
+    @Test
+    fun `check if two dates are in the same week`() {
+        val inputs = listOf(
+            LocalDate.of(2023, 2, 26),
+            LocalDate.of(2023, 2, 27),
+            LocalDate.of(2023, 2, 28),
+            LocalDate.of(2023, 3, 1),
+            LocalDate.of(2023, 3, 2),
+            LocalDate.of(2023, 3, 3),
+            LocalDate.of(2023, 3, 4),
+            LocalDate.of(2023, 3, 5),
+            LocalDate.of(2023, 3, 6),
+            LocalDate.of(2023, 3, 7),
+            LocalDate.of(2023, 3, 8),
+            LocalDate.of(2022, 3, 4),
+            LocalDate.of(2023, 2, 4),
+            LocalDate.of(2023, 4, 4),
+        )
+        val expected = listOf(
+            false,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+        )
+
+        inputs.forEachIndexed { i, input ->
+            val sampleDate = LocalDate.of(2023, 3, 2)
+            val result = input.isSameWeek(sampleDate)
+            println("Comparing [$i] expected `${input.dayOfWeek}` with ${sampleDate.dayOfWeek}" +
+                    " as result: $result")
+            assertEquals(expected[i], result)
         }
     }
 }

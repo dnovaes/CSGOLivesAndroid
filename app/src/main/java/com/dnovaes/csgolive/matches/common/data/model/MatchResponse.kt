@@ -1,6 +1,5 @@
 package com.dnovaes.csgolive.matches.common.data.model
 
-import com.dnovaes.csgolive.common.utilities.serializers.LocalDateTimeSerializer
 import java.time.LocalDateTime
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
@@ -23,7 +22,7 @@ data class MatchResponse(
 )
 
 fun List<MatchOpponentGroupResponse>.getItemNameOrDefault(pos: Int): String {
-    return this.getOrNull(pos)?.opponent?.name ?: "Team name not assigned"
+    return this.getOrNull(pos)?.opponent?.name ?: "?"
 }
 
 fun List<MatchOpponentGroupResponse>.getImageUrlOrNull(pos: Int)
