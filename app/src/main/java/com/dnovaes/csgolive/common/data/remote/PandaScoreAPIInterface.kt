@@ -15,6 +15,7 @@ interface PandaScoreAPIInterface{
     suspend fun getMatchesList(
         @Query("filter[videogame]") filterGameId: String,
         //@Query("filter[status]") status: String = "running",
+        @Query("finished") finished: Boolean,
         @Query("sort") sort: String,
         @Query("page") page: Int = 1,
         @Query("per_page") perPage: Int = 50,
@@ -26,7 +27,8 @@ interface PandaScoreAPIInterface{
 
     @GET("/csgo/matches/")
     suspend fun getCSGOMatchesList(
-        @Query("filter[begin_at]") filterBeginAt: String,
+        @Query("filter[status]") filterStatus: String,
+        @Query("finished") finished: Boolean,
         @Query("sort") sort: String,
         @Query("page") page: Int,
         @Query("per_page") perPage: Int = 50,

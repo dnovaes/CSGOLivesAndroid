@@ -3,7 +3,6 @@ package com.dnovaes.csgolive.matches.summary.data
 import com.dnovaes.csgolive.common.data.models.DispatcherInterface
 import com.dnovaes.csgolive.common.data.remote.PandaScoreAPIInterface
 import com.dnovaes.csgolive.matches.common.data.model.MatchResponse
-import java.time.LocalDate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -16,11 +15,11 @@ class MatchesRepository(
     fun requestMatchesList(page: Int = 1): Flow<Result<List<MatchResponse>>> {
         return flow {
             runCatching {
-                val dateNow = LocalDate.now()
                 api.getCSGOMatchesList(
-                    page = 1,
+                    filterStatus = "running, not_started",
+                    finished = false,
                     sort = "begin_at",
-                    filterBeginAt = dateNow.toString()
+                    page = 1,
                 )
             }.onFailure {
                 println("logd MatchesList - onFailure) cause: ${it.cause}\n\tmessage: ${it.message}\n")
