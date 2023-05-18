@@ -116,13 +116,14 @@ class MatchesItemViewHolder(private val itemLayout: ViewGroup) : RecyclerView.Vi
     }
 
     private fun bindTimeInfoByWeekDay(beginAt: LocalDateTime?) {
+        val context = itemLayout.context
         beginAt?.let { beginAt ->
             when {
                 (beginAt.toLocalDate() == LocalDate.now()) -> {
-                    matchTimeTextView.text = beginAt.getTodaysSummaryTimeLabel(itemLayout.context)
+                    matchTimeTextView.text = beginAt.getTodaysSummaryTimeLabel(context)
                 }
                 beginAt.toLocalDate().isSameWeek(LocalDate.now()) -> {
-                    matchTimeTextView.text = beginAt.getWeekdaySummaryTimeLabel(itemLayout.context)
+                    matchTimeTextView.text = beginAt.getWeekdaySummaryTimeLabel(context)
                 }
                 else -> {
                     val zoneDateTime = beginAt.atZone(ZoneId.of(Constants.ZoneId.UTC))
@@ -131,8 +132,11 @@ class MatchesItemViewHolder(private val itemLayout: ViewGroup) : RecyclerView.Vi
                 }
             }
         } ?: run {
-            matchTimeTextView.text = itemLayout.context.getString(R.string.to_be_defined)
+            matchTimeTextView.text = context.getString(R.string.to_be_defined)
         }
+        matchTimeBackgroundView.setImageDrawable(
+            ContextCompat.getDrawable(context, R.drawable.match_time_background_scheduled)
+        )
     }
 
     fun bindSerieInfo(serie: MatchSerieResponse) {
