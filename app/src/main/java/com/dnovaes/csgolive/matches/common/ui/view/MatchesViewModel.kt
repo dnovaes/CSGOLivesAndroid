@@ -11,9 +11,12 @@ import com.dnovaes.csgolive.matches.common.ui.model.Matches
 import com.dnovaes.csgolive.matches.summary.data.MatchesRepository
 import com.dnovaes.csgolive.matches.summary.ui.model.MatchSummaryUIDataProcess
 import com.dnovaes.csgolive.matches.summary.ui.model.asLoadedSummaryData
+import com.dnovaes.csgolive.matches.summary.ui.model.asLoadedSummaryDataFromPage
 import com.dnovaes.csgolive.matches.summary.ui.model.asProcessingSummaryData
+import com.dnovaes.csgolive.matches.summary.ui.model.asProcessingSummaryDataFromPage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -23,35 +26,79 @@ class MatchesViewModel @Inject constructor(
 
     private var matchState = UIViewState<Matches>(
         process = MatchSummaryUIDataProcess.LOAD_SUMMARY_MATCH,
-        state = UIDataState.STARTED
+        state = UIDataState.STARTED,
+        result = Matches(data = emptyList())
     )
 
     private val _matchesLiveData: MutableLiveData<UIViewState<Matches>> = MutableLiveData(matchState)
     val matchesLiveData: LiveData<UIViewState<Matches>> = _matchesLiveData
 
     fun refreshSummaryMatches() {
-        loadSummaryData()
+        loadInitialSummaryData()
     }
 
-    fun loadSummaryData() {
+    fun loadInitialSummaryData() {
         matchState = matchState
             .asProcessingSummaryData()
             .withError(null)
         _matchesLiveData.postValue(matchState)
-        viewModelScope.launch {
+        viewModelScope.launch (Dispatchers.IO) {
             matchesRepository.requestMatchesList().collect { response ->
-                handleMatchesResponse(response)
+                handleInitialMatchesResponse(response)
             }
         }
     }
 
-    private fun handleMatchesResponse(response: Result<List<MatchResponse>>) {
+    private fun handleInitialMatchesResponse(response: Result<List<MatchResponse>>) {
         response.getOrNull()?.let { matchesResponses ->
-            val matches = Matches(matchesResponses)
+            val matches = Matches(
+                amountPagesLoaded = 1,
+                data = matchesResponses
+            )
             matchState = matchState
                 .asLoadedSummaryData()
                 .withResult(matches)
             _matchesLiveData.postValue(matchState)
+        }
+    }
+
+    fun loadsMoreSummaryMatchesFromPage() {
+        matchState.result?.let { modelState ->
+            matchState = matchState
+                .asProcessingSummaryDataFromPage()
+                .withError(null)
+            _matchesLiveData.postValue(matchState)
+
+            val pageRequest = modelState.amountPagesLoaded + 1
+            viewModelScope.launch(Dispatchers.IO) {
+                matchesRepository.requestMatchesList(pageRequest).collect { response ->
+                    handleMatchesFromPageResponse(pageRequest, response)
+                }
+            }
+        }
+    }
+
+
+    private fun handleMatchesFromPageResponse(
+        requestedPage: Int,
+        response: Result<List<MatchResponse>>
+    ) {
+        response.getOrNull()?.let { matchesResponses ->
+            matchState.result?.let { modelState ->
+                val currentMatches = modelState.data.toMutableList()
+                currentMatches.addAll(matchesResponses)
+
+                val newModel = modelState.copy(
+                    amountPagesLoaded = requestedPage,
+                    data = currentMatches
+                )
+                matchState = matchState
+                    .asLoadedSummaryDataFromPage()
+                    .withResult(newModel)
+                _matchesLiveData.postValue(matchState)
+            } ?: run {
+                //postError: System loading error
+            }
         }
     }
 }

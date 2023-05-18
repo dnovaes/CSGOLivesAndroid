@@ -31,6 +31,6 @@ interface PandaScoreAPIInterface{
         @Query("finished") finished: Boolean,
         @Query("sort") sort: String,
         @Query("page") page: Int,
-        @Query("per_page") perPage: Int = 50,
+        @Query("per_page") perPage: Int = 20,
     ): List<MatchResponse>
 }

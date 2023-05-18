@@ -19,13 +19,31 @@ fun UIViewState<Matches>.isDoneLoadingSummaryData() =
             && this.process == MatchSummaryUIDataProcess.LOAD_SUMMARY_MATCH
 
 
+fun UIViewState<Matches>.isProcessingLoadSummaryDataFromPage() =
+    this.state == UIDataState.PROCESSING
+            && this.process == MatchSummaryUIDataProcess.LOAD_SUMMARY_MATCH_FROM_PAGE
+
+fun UIViewState<Matches>.isDoneLoadingSummaryDataFromPage() =
+    this.state == UIDataState.DONE
+            && this.process == MatchSummaryUIDataProcess.LOAD_SUMMARY_MATCH_FROM_PAGE
+
+
 // Assigning methods
 
-fun UIViewState<Matches>.asProcessingSummaryData() = UIViewState<Matches>(
+fun UIViewState<Matches>.asProcessingSummaryData() = copy(
     process = MatchSummaryUIDataProcess.LOAD_SUMMARY_MATCH,
     state = UIDataState.PROCESSING
 )
-fun UIViewState<Matches>.asLoadedSummaryData() = UIViewState<Matches>(
+fun UIViewState<Matches>.asLoadedSummaryData() = copy(
     process = MatchSummaryUIDataProcess.LOAD_SUMMARY_MATCH,
+    state = UIDataState.DONE
+)
+
+fun UIViewState<Matches>.asProcessingSummaryDataFromPage() = copy(
+    process = MatchSummaryUIDataProcess.LOAD_SUMMARY_MATCH_FROM_PAGE,
+    state = UIDataState.PROCESSING
+)
+fun UIViewState<Matches>.asLoadedSummaryDataFromPage() = copy(
+    process = MatchSummaryUIDataProcess.LOAD_SUMMARY_MATCH_FROM_PAGE,
     state = UIDataState.DONE
 )

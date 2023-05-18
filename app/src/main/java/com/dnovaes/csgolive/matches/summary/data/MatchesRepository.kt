@@ -19,7 +19,7 @@ class MatchesRepository(
                     filterStatus = "running, not_started",
                     finished = false,
                     sort = "begin_at",
-                    page = 1,
+                    page = page,
                 )
             }.onFailure {
                 println("logd MatchesList - onFailure) cause: ${it.cause}\n\tmessage: ${it.message}\n")

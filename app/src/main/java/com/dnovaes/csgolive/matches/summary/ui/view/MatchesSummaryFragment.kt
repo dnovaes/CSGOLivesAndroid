@@ -9,13 +9,16 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dnovaes.csgolive.common.ui.views.BaseFragment
 import com.dnovaes.csgolive.common.ui.viewstate.UIViewState
+import com.dnovaes.csgolive.common.utilities.ui.listeners.InfiniteScrollListener
 import com.dnovaes.csgolive.databinding.FragmentMatchesBinding
 import com.dnovaes.csgolive.matches.common.data.model.MatchResponse
 import com.dnovaes.csgolive.matches.common.ui.model.Matches
 import com.dnovaes.csgolive.matches.common.ui.view.MatchesAdapter
 import com.dnovaes.csgolive.matches.common.ui.view.MatchesViewModel
 import com.dnovaes.csgolive.matches.summary.ui.model.isDoneLoadingSummaryData
+import com.dnovaes.csgolive.matches.summary.ui.model.isDoneLoadingSummaryDataFromPage
 import com.dnovaes.csgolive.matches.summary.ui.model.isProcessingLoadSummaryData
+import com.dnovaes.csgolive.matches.summary.ui.model.isProcessingLoadSummaryDataFromPage
 import com.dnovaes.csgolive.matches.summary.ui.model.isStartingLoadSummaryData
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -39,13 +42,15 @@ class MatchesSummaryFragment : BaseFragment<FragmentMatchesBinding>() {
 
     private val matchObserver: Observer<UIViewState<Matches>> = Observer { modelState ->
         when {
-            modelState.isStartingLoadSummaryData() -> viewModel.loadSummaryData()
-            modelState.isProcessingLoadSummaryData() -> {
+            modelState.isStartingLoadSummaryData() -> viewModel.loadInitialSummaryData()
+            modelState.isProcessingLoadSummaryData() ||
+            modelState.isProcessingLoadSummaryDataFromPage() -> {
                 if (!binding.summarySwipeRefreshLayout.isRefreshing) {
                     showLoadingSpinner()
                 }
             }
-            modelState.isDoneLoadingSummaryData() -> {
+            modelState.isDoneLoadingSummaryData() ||
+            modelState.isDoneLoadingSummaryDataFromPage() -> {
                 binding.summarySwipeRefreshLayout.isRefreshing = false
                 hideLoadingSpinner()
                 modelState.result?.let { matches ->
@@ -74,6 +79,9 @@ class MatchesSummaryFragment : BaseFragment<FragmentMatchesBinding>() {
             recyclerView.adapter = matchesAdapter
             recyclerView.layoutManager = LinearLayoutManager(this.context)
         }
+        binding.summaryRecyclerView.addOnScrollListener(InfiniteScrollListener {
+            viewModel.loadsMoreSummaryMatchesFromPage()
+        })
     }
 
     private fun updatesRecyclerView(matches: List<MatchResponse>) {
