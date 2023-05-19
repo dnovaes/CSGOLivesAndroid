@@ -4,8 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dnovaes.csgolive.common.ui.views.BaseFragment
 import com.dnovaes.csgolive.common.ui.viewstate.UIViewState
@@ -25,7 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MatchesSummaryFragment : BaseFragment<FragmentMatchesBinding>() {
 
-    private val viewModel: MatchesViewModel by viewModels()
+    private val viewModel: MatchesViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -74,7 +75,10 @@ class MatchesSummaryFragment : BaseFragment<FragmentMatchesBinding>() {
     }
 
     private fun bindRecyclerView() {
-        val matchesAdapter = MatchesAdapter(emptyList())
+        val matchesAdapter = MatchesAdapter(emptyList()) { matchId ->
+            val action = MatchesSummaryFragmentDirections.actionSummaryFragmentToMatchDetailFragment(matchId)
+            findNavController().navigate(action)
+        }
         binding.summaryRecyclerView.let { recyclerView ->
             recyclerView.adapter = matchesAdapter
             recyclerView.layoutManager = LinearLayoutManager(this.context)

@@ -25,7 +25,8 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 
 class MatchesAdapter(
-    private var matches: List<MatchResponse>
+    private var matches: List<MatchResponse>,
+    private val onItemClick: (Int) -> Unit
 ): RecyclerView.Adapter<MatchesItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MatchesItemViewHolder {
@@ -40,6 +41,7 @@ class MatchesAdapter(
     override fun onBindViewHolder(holder: MatchesItemViewHolder, position: Int) {
         val item = matches[position]
 
+        holder.bindItemClick(item.id.toInt(), onItemClick)
         holder.bindLeagueInfo(item.league)
         holder.bindTimeInfo(item)
         holder.bindTeamInfo(item.opponents)
@@ -70,6 +72,12 @@ class MatchesItemViewHolder(private val itemLayout: ViewGroup) : RecyclerView.Vi
     private val leagueTitleView: TextView = itemLayout.findViewById(R.id.match_league_title)
     private val leagueImgLogoView: ImageView = itemLayout.findViewById(R.id.match_league_logo_img)
     private val serieTitleView: TextView = itemLayout.findViewById(R.id.match_serie_title)
+
+    fun bindItemClick(itemId: Int, onItemClick: (Int) -> Unit) {
+        itemLayout.setOnClickListener {
+            onItemClick(itemId)
+        }
+    }
 
     fun bindLeagueInfo(league: MatchLeagueResponse) {
         leagueTitleView.text = league.name

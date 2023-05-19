@@ -4,4 +4,5 @@
     <dimen name="img_fuze_splash_size">113dp</dimen>
     <dimen name="league_serie_text_size">9sp</dimen>
     <dimen name="match_time_text_size">9sp</dimen>
+    <dimen name="match_detail_title_height">24sp</dimen>
 </resources>
