@@ -3,9 +3,11 @@ package com.dnovaes.csgolive.common.utilities.extensions
 import android.content.Context
 import androidx.annotation.StringRes
 import com.dnovaes.csgolive.R
+import com.dnovaes.csgolive.common.utilities.Constants
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.temporal.IsoFields
 
@@ -19,11 +21,40 @@ fun ZonedDateTime.getSummaryMatchTime(): String {
     return "${formattedDayMonth}.${formattedMonth} ${formattedHour}:${formattedMinute}"
 }
 
+fun LocalDateTime.getMatchTimeLabel(context: Context): CharSequence {
+    return when {
+        (this.toLocalDate() == LocalDate.now()) -> {
+            this.getTodaysSummaryTimeLabel(context)
+        }
+/*
+        (toLocalDate() == LocalDate.now().plusDays(1)) -> {
+            getTomorrowSummaryTimeLabel(context)
+        }
+*/
+        this.toLocalDate().isSameWeek(LocalDate.now()) -> {
+            this.getWeekdaySummaryTimeLabel(context)
+        }
+        else -> {
+            val zoneDateTime = this.atZone(ZoneId.of(Constants.ZoneId.UTC))
+                .withZoneSameInstant(ZoneId.systemDefault())
+            zoneDateTime.getSummaryMatchTime()
+        }
+    }
+}
+
 fun LocalDateTime.getTodaysSummaryTimeLabel(context: Context): CharSequence {
+    return getSummaryTimeLabel(context, R.string.today)
+}
+
+fun LocalDateTime.getTomorrowSummaryTimeLabel(context: Context): CharSequence {
+    return getSummaryTimeLabel(context, R.string.tomorrow)
+}
+
+fun LocalDateTime.getSummaryTimeLabel(context: Context, @StringRes resId: Int): CharSequence {
     val formattedHour = String.format(TWO_DIGITS, hour)
     val formattedMinute = String.format(TWO_DIGITS, minute)
-    val today = context.getString(R.string.today).capitalize()
-    return "$today, $formattedHour:$formattedMinute"
+    val stringRes = context.getString(resId).capitalize()
+    return "$stringRes, $formattedHour:$formattedMinute"
 }
 
 fun LocalDateTime.getWeekdaySummaryTimeLabel(context: Context): CharSequence {

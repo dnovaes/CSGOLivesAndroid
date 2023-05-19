@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.dnovaes.csgolive.R
 import com.dnovaes.csgolive.common.utilities.Constants
+import com.dnovaes.csgolive.common.utilities.extensions.getMatchTimeLabel
 import com.dnovaes.csgolive.common.utilities.extensions.getSummaryMatchTime
 import com.dnovaes.csgolive.common.utilities.extensions.getTodaysSummaryTimeLabel
 import com.dnovaes.csgolive.common.utilities.extensions.getWeekdaySummaryTimeLabel
@@ -126,19 +127,7 @@ class MatchesItemViewHolder(private val itemLayout: ViewGroup) : RecyclerView.Vi
     private fun bindTimeInfoByWeekDay(beginAt: LocalDateTime?) {
         val context = itemLayout.context
         beginAt?.let { beginAt ->
-            when {
-                (beginAt.toLocalDate() == LocalDate.now()) -> {
-                    matchTimeTextView.text = beginAt.getTodaysSummaryTimeLabel(context)
-                }
-                beginAt.toLocalDate().isSameWeek(LocalDate.now()) -> {
-                    matchTimeTextView.text = beginAt.getWeekdaySummaryTimeLabel(context)
-                }
-                else -> {
-                    val zoneDateTime = beginAt.atZone(ZoneId.of(Constants.ZoneId.UTC))
-                        .withZoneSameInstant(ZoneId.systemDefault())
-                    matchTimeTextView.text = zoneDateTime.getSummaryMatchTime()
-                }
-            }
+            matchTimeTextView.text = beginAt.getMatchTimeLabel(context)
         } ?: run {
             matchTimeTextView.text = context.getString(R.string.to_be_defined)
         }

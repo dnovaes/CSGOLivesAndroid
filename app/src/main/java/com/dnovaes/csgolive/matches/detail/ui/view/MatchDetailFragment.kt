@@ -12,6 +12,7 @@ import coil.load
 import com.dnovaes.csgolive.R
 import com.dnovaes.csgolive.common.ui.views.BaseFragment
 import com.dnovaes.csgolive.common.ui.viewstate.UIViewState
+import com.dnovaes.csgolive.common.utilities.extensions.getMatchTimeLabel
 import com.dnovaes.csgolive.databinding.FragmentMatchDetailBinding
 import com.dnovaes.csgolive.matches.common.data.model.MatchOpponentGroupResponse
 import com.dnovaes.csgolive.matches.common.data.model.getImageUrlOrNull
@@ -56,6 +57,8 @@ class MatchDetailFragment : BaseFragment<FragmentMatchDetailBinding>() {
             val match = modelData.data.firstOrNull { it.id.toInt() == args.matchId } ?: return@Observer
             bindTeamInfo(match.opponents)
             bindSerieLeagueName(match.serie.name, match.league.name)
+            binding.matchDetailTime.text = match.beginAt?.getMatchTimeLabel(requireContext())
+                ?: context?.getString(R.string.to_be_defined)
         }
     }
 
