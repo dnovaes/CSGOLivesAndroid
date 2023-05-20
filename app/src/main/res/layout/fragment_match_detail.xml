@@ -30,7 +30,7 @@
         android:textSize="18sp"
         android:lineHeight="24dp"
         android:textColor="@android:color/white"
-        android:fontFamily="@font/roboto_regular"
+        android:fontFamily="@font/roboto_medium"
         android:textFontWeight="500"
         android:ellipsize="none"
         android:maxLines="2"
