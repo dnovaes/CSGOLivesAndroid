@@ -30,6 +30,7 @@ fun UIViewState<Matches>.isDoneLoadingSummaryDataFromPage() =
 
 // Assigning methods
 
+//SUMMARY_DATA
 fun UIViewState<Matches>.asProcessingSummaryData() = copy(
     process = MatchSummaryUIDataProcess.LOAD_SUMMARY_MATCH,
     state = UIDataState.PROCESSING
@@ -39,6 +40,7 @@ fun UIViewState<Matches>.asLoadedSummaryData() = copy(
     state = UIDataState.DONE
 )
 
+//SUMMARY_MATCH_PAGE
 fun UIViewState<Matches>.asProcessingSummaryDataFromPage() = copy(
     process = MatchSummaryUIDataProcess.LOAD_SUMMARY_MATCH_FROM_PAGE,
     state = UIDataState.PROCESSING

@@ -14,11 +14,15 @@ import com.dnovaes.csgolive.common.ui.views.BaseFragment
 import com.dnovaes.csgolive.common.ui.viewstate.UIViewState
 import com.dnovaes.csgolive.common.utilities.extensions.getMatchTimeLabel
 import com.dnovaes.csgolive.databinding.FragmentMatchDetailBinding
+import com.dnovaes.csgolive.matches.common.data.model.MatchDetail
 import com.dnovaes.csgolive.matches.common.data.model.MatchOpponentGroupResponse
 import com.dnovaes.csgolive.matches.common.data.model.getImageUrlOrNull
 import com.dnovaes.csgolive.matches.common.data.model.getItemNameOrDefault
 import com.dnovaes.csgolive.matches.common.ui.model.Matches
 import com.dnovaes.csgolive.matches.common.ui.view.MatchesViewModel
+import com.dnovaes.csgolive.matches.summary.ui.model.isDoneLoadingMatchDetail
+import com.dnovaes.csgolive.matches.summary.ui.model.isProcessingLoadMatchDetail
+import com.dnovaes.csgolive.matches.summary.ui.model.isStartLoadMatchDetail
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -43,6 +47,13 @@ class MatchDetailFragment : BaseFragment<FragmentMatchDetailBinding>() {
 
     private fun setObservers() {
         viewModel.matchesLiveData.observe(viewLifecycleOwner, matchesObserver)
+        viewModel.matchDetailLiveData.observe(viewLifecycleOwner, matchDetailObserver)
+    }
+
+    override fun onDestroyView() {
+        viewModel.matchesLiveData.removeObserver(matchesObserver)
+        viewModel.matchDetailLiveData.removeObserver(matchDetailObserver)
+        super.onDestroyView()
     }
 
     private fun bindElements() {
@@ -59,6 +70,18 @@ class MatchDetailFragment : BaseFragment<FragmentMatchDetailBinding>() {
             bindSerieLeagueName(match.serie.name, match.league.name)
             binding.matchDetailTime.text = match.beginAt?.getMatchTimeLabel(requireContext())
                 ?: context?.getString(R.string.to_be_defined)
+        }
+    }
+
+    private val matchDetailObserver: Observer<UIViewState<MatchDetail>> = Observer { modelState ->
+        when {
+            modelState.isStartLoadMatchDetail() -> viewModel.loadMatchDetail(args.matchId)
+            modelState.isProcessingLoadMatchDetail() -> {
+                showLoadingSpinner()
+            }
+            modelState.isDoneLoadingMatchDetail() -> {
+                hideLoadingSpinner()
+            }
         }
     }
 

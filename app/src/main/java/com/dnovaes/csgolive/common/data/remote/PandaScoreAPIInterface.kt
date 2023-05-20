@@ -1,7 +1,9 @@
 package com.dnovaes.csgolive.common.data.remote
 
+import com.dnovaes.csgolive.matches.common.data.model.MatchDetail
 import com.dnovaes.csgolive.matches.common.data.model.MatchResponse
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 const val PANDASCORE_SERVICE_URL = "https://api.pandascore.co/"
@@ -33,4 +35,9 @@ interface PandaScoreAPIInterface{
         @Query("page") page: Int,
         @Query("per_page") perPage: Int = 20,
     ): List<MatchResponse>
+
+    @GET("csgo/matches/{matchId}")
+    suspend fun getMatch(
+        @Path("matchId") matchId: Int
+    ): MatchDetail
 }
