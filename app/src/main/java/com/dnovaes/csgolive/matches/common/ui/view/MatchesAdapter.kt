@@ -72,7 +72,6 @@ class MatchesItemViewHolder(private val itemLayout: ViewGroup) : RecyclerView.Vi
             teamIds.add(it.opponent.id.toInt())
         }
         itemLayout.setOnClickListener {
-            println("log teamIds for the item selected: $teamIds")
             if (teamIds.size == 2) {
                 onItemClick(item.id.toInt(), teamIds)
             }

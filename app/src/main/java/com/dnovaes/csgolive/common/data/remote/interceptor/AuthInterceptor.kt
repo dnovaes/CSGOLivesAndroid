@@ -17,7 +17,6 @@ class AuthInterceptor: AuthInterceptorInterface {
             .newBuilder()
             .addHeader(AUTHORIZATION, BuildConfig.PANDASCORE_API_KEY)
             .build()
-        println("LOG request sent: $request")
         return chain.proceed(request)
     }
 }
