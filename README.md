@@ -27,4 +27,4 @@ PANDASCORE_API_KEY=TypEPnYourCoDeTOKENHeRe
 The CSGO App is released under the MIT License. Feel free to use, modify, and distribute the app as per the terms of the license.
 
 ### Contact
-If you have any questions or suggestions regarding the CSGO App, feel free to reach out using this github on my email on my github profile. I'd love to hear from you!
+If you have any questions or suggestions regarding the CSGO App, feel free to reach out using this github or from my email on github profile. I'd love to hear from you!
