@@ -1,6 +1,7 @@
 package com.dnovaes.csgolive.common.utilities.utilities.extensions
 
 import com.dnovaes.csgolive.common.utilities.Constants
+import com.dnovaes.csgolive.common.utilities.extensions.formatUsingLocalZoneId
 import com.dnovaes.csgolive.common.utilities.extensions.getSummaryMatchTime
 import com.dnovaes.csgolive.common.utilities.extensions.isSameWeek
 import java.time.LocalDate
@@ -95,6 +96,22 @@ class ExtensionsTest {
             val result = input.isSameWeek(sampleDate)
             println("Comparing [$i] expected `${input.dayOfWeek}` with ${sampleDate.dayOfWeek}" +
                     " as result: $result")
+            assertEquals(expected[i], result)
+        }
+    }
+
+    @Test
+    fun `check if mapping to localDateTime works`() {
+        val inputs = listOf<LocalDateTime>(
+            LocalDateTime.of(2023, 5, 20, 20, 0)
+        )
+        val expected = listOf(
+            LocalDateTime.of(2023, 5, 20, 17, 0)
+        )
+
+        inputs.forEachIndexed { i, input ->
+            val result = input.formatUsingLocalZoneId()
+            println("Comparing [$i] input: ${input}, expected `${expected[i]}` as result: $result")
             assertEquals(expected[i], result)
         }
     }

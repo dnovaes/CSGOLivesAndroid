@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.annotation.StringRes
 import com.dnovaes.csgolive.R
 import com.dnovaes.csgolive.common.utilities.Constants
+import com.dnovaes.csgolive.matches.common.data.model.MatchResponse
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -90,3 +91,12 @@ fun DayOfWeek.getResourceString(context: Context): Int? {
         else -> null
     }
 }
+
+fun LocalDateTime.formatUsingLocalZoneId(): LocalDateTime {
+    val utcZoneId = ZoneId.of(Constants.ZoneId.UTC)
+    val localZoneId = ZoneId.systemDefault()
+    return this.atZone(utcZoneId)
+        .withZoneSameInstant(localZoneId)
+        .toLocalDateTime()
+}
+

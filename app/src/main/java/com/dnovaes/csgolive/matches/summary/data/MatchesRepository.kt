@@ -2,6 +2,7 @@ package com.dnovaes.csgolive.matches.summary.data
 
 import com.dnovaes.csgolive.common.data.models.DispatcherInterface
 import com.dnovaes.csgolive.common.data.remote.PandaScoreAPIInterface
+import com.dnovaes.csgolive.common.utilities.extensions.formatUsingLocalZoneId
 import com.dnovaes.csgolive.matches.common.data.model.MatchDetail
 import com.dnovaes.csgolive.matches.common.data.model.MatchResponse
 import com.dnovaes.csgolive.matches.common.data.model.TeamInfoResponse
@@ -22,7 +23,7 @@ class MatchesRepository(
                     finished = false,
                     sort = "begin_at",
                     page = page,
-                )
+                ).mapDatesWithLocalZonedId()
             }.onFailure {
                 println("logd MatchesList - onFailure) cause: ${it.cause}\n\tmessage: ${it.message}\n")
                 println("logd MatchesList - onFailure) stackTrace: ${it.stackTrace.first()}")
@@ -47,6 +48,16 @@ class MatchesRepository(
                 emit(Result.success(it))
             }
         }.flowOn(dispatcher.io)
+    }
+
+    //TODO: Add to mapper class
+    private fun List<MatchResponse>.mapDatesWithLocalZonedId(): List<MatchResponse> {
+        val formattedMatchesModel = mutableListOf<MatchResponse>()
+        this.forEach {
+            val formattedLocalDateTime = it.beginAt?.formatUsingLocalZoneId()
+            formattedMatchesModel.add(it.copy(beginAt = formattedLocalDateTime))
+        }
+        return formattedMatchesModel.toList()
     }
 
     fun requestMatchDetail(matchId: Int): Flow<Result<MatchDetail>> {
