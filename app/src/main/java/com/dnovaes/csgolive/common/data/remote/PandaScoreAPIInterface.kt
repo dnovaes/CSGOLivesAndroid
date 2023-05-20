@@ -2,6 +2,7 @@ package com.dnovaes.csgolive.common.data.remote
 
 import com.dnovaes.csgolive.matches.common.data.model.MatchDetail
 import com.dnovaes.csgolive.matches.common.data.model.MatchResponse
+import com.dnovaes.csgolive.matches.common.data.model.TeamInfoResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -35,6 +36,11 @@ interface PandaScoreAPIInterface{
         @Query("page") page: Int,
         @Query("per_page") perPage: Int = 20,
     ): List<MatchResponse>
+
+    @GET("csgo/teams/")
+    suspend fun getTeamInfo(
+        @Query("filter[id]") id: String
+    ): List<TeamInfoResponse>
 
     @GET("csgo/matches/{matchId}")
     suspend fun getMatch(

@@ -4,12 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dnovaes.csgolive.R
 import com.dnovaes.csgolive.common.ui.viewstate.UIViewState
 import com.dnovaes.csgolive.common.ui.viewstate.UIDataState
 import com.dnovaes.csgolive.matches.common.data.model.MatchDetail
-import com.dnovaes.csgolive.matches.common.data.model.MatchPlayerResponse
 import com.dnovaes.csgolive.matches.common.data.model.MatchResponse
+import com.dnovaes.csgolive.matches.common.data.model.TeamInfoResponse
 import com.dnovaes.csgolive.matches.common.ui.model.Matches
+import com.dnovaes.csgolive.matches.common.ui.model.UIError
 import com.dnovaes.csgolive.matches.detail.ui.model.MatchDetailUIProcess
 import com.dnovaes.csgolive.matches.summary.data.MatchesRepository
 import com.dnovaes.csgolive.matches.summary.ui.model.MatchSummaryUIDataProcess
@@ -23,7 +25,6 @@ import com.dnovaes.csgolive.matches.summary.ui.model.asProcessingSummaryDataFrom
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -111,69 +112,62 @@ class MatchesViewModel @Inject constructor(
                     .withResult(newModel)
                 _matchesLiveData.postValue(matchState)
             } ?: run {
-                //postError: System loading error
+                postMatchSummaryLoadError()
             }
         }
     }
 
-    fun loadMatchDetail(matchId: Int) {
+    private fun postMatchSummaryLoadError() {
+        matchState = matchState
+            .asLoadedSummaryData()
+            .withResult(null)
+            .withError(UIError(R.string.system_error))
+        _matchesLiveData.postValue(matchState)
+    }
+
+    fun loadMatchDetail(teamIds: List<Int>) {
         matchDetailState = matchDetailState
             .asProcessingMatchDetail()
             .withError(null)
         _matchDetailLiveData.postValue(matchDetailState)
 
-        viewModelScope.launch (Dispatchers.IO) {
-/*
-            matchesRepository.requestMatchDetail(matchId).collect { response ->
-                handleMatchResponse(response)
-            }
-*/
-            delay(2500)
-            handleMatchResponse(getFixtureMatchDetail())
-        }
-    }
-
-    private fun getFixtureMatchDetail() = Result.success(
-        MatchDetail(
-            opponents = emptyList(),
-            players = listOf(
-                getFixturePlayer("Yfful", "Eiichiro", "Oda", "team1"),
-                getFixturePlayer("Player2", "Nome", "Jogador", "team1"),
-                getFixturePlayer("Player3", "Nome", "Jogador", "team1"),
-                getFixturePlayer("Player4", "Nome", "Jogador", "team1"),
-                getFixturePlayer("Player5", "Nome", "Jogador", "team1"),
-                getFixturePlayer("Ukog", "Akira", "Toryama", "team2"),
-                getFixturePlayer("Player2", "Nome", "Jogador", "team2"),
-                getFixturePlayer("Player3", "Nome", "Jogador", "team2"),
-                getFixturePlayer("Player4", "Nome", "Jogador", "team2"),
-                getFixturePlayer("Player5", "Nome", "Jogador", "team2"),
-            )
-        )
-    )
-
-    private fun getFixturePlayer(
-        nick: String,
-        firstName: String,
-        lastName: String? = null,
-        slug: String,
-    ): MatchPlayerResponse {
-        return MatchPlayerResponse(
-            id = Math.random().toInt(),
-            imageUrl = null,
-            firstName = firstName,
-            lastName = lastName,
-            nickName = nick,
-            slug = slug
-        )
-    }
-
-    private fun handleMatchResponse(response: Result<MatchDetail>) {
-        response.getOrNull()?.let { matchDetail ->
+        if (teamIds.size != 2) {
             matchDetailState = matchDetailState
                 .asLoadedMatchDetail()
-                .withResult(matchDetail)
+                .withError(UIError(R.string.system_error))
             _matchDetailLiveData.postValue(matchDetailState)
+            return
         }
+        viewModelScope.launch (Dispatchers.IO) {
+            matchesRepository.requestTeamInfo(teamIds).collect { response ->
+                handleTeamResponse(response)
+            }
+        }
+    }
+
+    private fun handleTeamResponse(response: Result<List<TeamInfoResponse>>) {
+        response.getOrNull()?.let { response ->
+            if (response.size != 2) {
+                postMatchDetailLoadError()
+            } else {
+                val newModel = MatchDetail(
+                    team1 = response[0],
+                    team2 = response[1],
+                )
+                matchDetailState = matchDetailState
+                    .asLoadedMatchDetail()
+                    .withResult(newModel)
+                _matchDetailLiveData.postValue(matchDetailState)
+            }
+        }
+    }
+
+    private fun postMatchDetailLoadError() {
+        matchDetailState = matchDetailState
+            .asLoadedMatchDetail()
+            .withResult(null)
+            .withError(UIError(R.string.system_error))
+        _matchDetailLiveData.postValue(matchDetailState)
     }
 
     fun userLeftMatchDetailScreen() {

@@ -75,8 +75,8 @@ class MatchesSummaryFragment : BaseFragment<FragmentMatchesBinding>() {
     }
 
     private fun bindRecyclerView() {
-        val matchesAdapter = MatchesAdapter(emptyList()) { matchId ->
-            val action = MatchesSummaryFragmentDirections.actionSummaryFragmentToMatchDetailFragment(matchId)
+        val matchesAdapter = MatchesAdapter(emptyList()) { matchId, teamIds ->
+            val action = MatchesSummaryFragmentDirections.actionSummaryFragmentToMatchDetailFragment(matchId, teamIds[0], teamIds[1])
             findNavController().navigate(action)
         }
         binding.summaryRecyclerView.let { recyclerView ->

@@ -8,12 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.dnovaes.csgolive.R
-import com.dnovaes.csgolive.common.utilities.Constants
 import com.dnovaes.csgolive.common.utilities.extensions.getMatchTimeLabel
-import com.dnovaes.csgolive.common.utilities.extensions.getSummaryMatchTime
-import com.dnovaes.csgolive.common.utilities.extensions.getTodaysSummaryTimeLabel
-import com.dnovaes.csgolive.common.utilities.extensions.getWeekdaySummaryTimeLabel
-import com.dnovaes.csgolive.common.utilities.extensions.isSameWeek
 import com.dnovaes.csgolive.matches.common.data.model.MatchGameStatus
 import com.dnovaes.csgolive.matches.common.data.model.MatchLeagueResponse
 import com.dnovaes.csgolive.matches.common.data.model.MatchOpponentGroupResponse
@@ -21,13 +16,11 @@ import com.dnovaes.csgolive.matches.common.data.model.MatchResponse
 import com.dnovaes.csgolive.matches.common.data.model.MatchSerieResponse
 import com.dnovaes.csgolive.matches.common.data.model.getImageUrlOrNull
 import com.dnovaes.csgolive.matches.common.data.model.getItemNameOrDefault
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.ZoneId
 
 class MatchesAdapter(
     private var matches: List<MatchResponse>,
-    private val onItemClick: (Int) -> Unit
+    private val onItemClick: (Int, List<Int>) -> Unit
 ): RecyclerView.Adapter<MatchesItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MatchesItemViewHolder {
@@ -41,8 +34,7 @@ class MatchesAdapter(
 
     override fun onBindViewHolder(holder: MatchesItemViewHolder, position: Int) {
         val item = matches[position]
-
-        holder.bindItemClick(item.id.toInt(), onItemClick)
+        holder.bindItemClick(item, onItemClick)
         holder.bindLeagueInfo(item.league)
         holder.bindTimeInfo(item)
         holder.bindTeamInfo(item.opponents)
@@ -74,9 +66,16 @@ class MatchesItemViewHolder(private val itemLayout: ViewGroup) : RecyclerView.Vi
     private val leagueImgLogoView: ImageView = itemLayout.findViewById(R.id.match_league_logo_img)
     private val serieTitleView: TextView = itemLayout.findViewById(R.id.match_serie_title)
 
-    fun bindItemClick(itemId: Int, onItemClick: (Int) -> Unit) {
+    fun bindItemClick(item: MatchResponse, onItemClick: (Int, List<Int>) -> Unit) {
+        val teamIds = mutableListOf<Int>()
+        item.opponents.forEach {
+            teamIds.add(it.opponent.id.toInt())
+        }
         itemLayout.setOnClickListener {
-            onItemClick(itemId)
+            println("log teamIds for the item selected: $teamIds")
+            if (teamIds.size == 2) {
+                onItemClick(item.id.toInt(), teamIds)
+            }
         }
     }
 

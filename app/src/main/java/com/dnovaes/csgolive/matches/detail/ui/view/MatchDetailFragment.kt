@@ -18,7 +18,7 @@ import com.dnovaes.csgolive.common.utilities.extensions.getMatchTimeLabel
 import com.dnovaes.csgolive.databinding.FragmentMatchDetailBinding
 import com.dnovaes.csgolive.matches.common.data.model.MatchDetail
 import com.dnovaes.csgolive.matches.common.data.model.MatchOpponentGroupResponse
-import com.dnovaes.csgolive.matches.common.data.model.MatchPlayerResponse
+import com.dnovaes.csgolive.matches.common.data.model.TeamPlayerResponse
 import com.dnovaes.csgolive.matches.common.data.model.getImageUrlOrNull
 import com.dnovaes.csgolive.matches.common.data.model.getItemNameOrDefault
 import com.dnovaes.csgolive.matches.common.ui.model.Matches
@@ -45,7 +45,8 @@ class MatchDetailFragment : BaseFragment<FragmentMatchDetailBinding>() {
         super.onViewCreated(view, savedInstanceState)
         setObservers()
         bindElements()
-        viewModel.loadMatchDetail(args.matchId)
+        val teamIds = listOf(args.team1, args.team2)
+        viewModel.loadMatchDetail(teamIds)
     }
 
     private fun setObservers() {
@@ -84,8 +85,8 @@ class MatchDetailFragment : BaseFragment<FragmentMatchDetailBinding>() {
             }
             modelState.isDoneLoadingMatchDetail() -> {
                 hideLoadingSpinner()
-                modelState.result?.let {matchDetail ->
-                    bindPlayersData(matchDetail.players)
+                modelState.result?.let { matchDetail ->
+                    bindPlayersData(matchDetail.team1.players, matchDetail.team2.players)
                 }
             }
         }
@@ -123,28 +124,29 @@ class MatchDetailFragment : BaseFragment<FragmentMatchDetailBinding>() {
         }
     }
 
-    private fun bindPlayersData(players: List<MatchPlayerResponse>) {
-        val slugLeft = "team1"
+    private fun bindPlayersData(
+        players1: List<TeamPlayerResponse>,
+        players2: List<TeamPlayerResponse>
+    ) {
         bindTeam(
-            players.filter { it.slug == slugLeft },
+            players1,
             R.layout.recycler_view_match_detail_player_item_left,
             binding.team1RecyclerView
         )
-        val slugRight = "team2"
         bindTeam(
-            players.filter { it.slug == slugRight },
+            players2,
             R.layout.recycler_view_match_detail_player_item_right,
             binding.team2RecyclerView
         )
     }
 
     private fun bindTeam(
-        playersTeam1: List<MatchPlayerResponse>,
+        players: List<TeamPlayerResponse>,
         layoutId: Int,
         recyclerView: RecyclerView
     ) {
         val matchDetailPlayersAdapter = MatchDetailPlayersAdapter(
-            playersTeam1,
+            players,
             layoutId
         )
         recyclerView.adapter = matchDetailPlayersAdapter

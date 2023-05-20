@@ -16,4 +16,5 @@
     <string name="sunday">Sunday</string>
     <string name="to_be_defined">A definir</string>
     <string name="match_detail_fragment_label">Match Detail Fragment</string>
+    <string name="system_error">Não foi possível processar essa requisão. Tente mais tarde</string>
 </resources>

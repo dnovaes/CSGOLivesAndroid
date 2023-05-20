@@ -25,6 +25,12 @@
         <argument
             android:name="matchId"
             app:argType="integer" />
+        <argument
+            android:name="team1"
+            app:argType="integer" />
+        <argument
+            android:name="team2"
+            app:argType="integer" />
     </fragment>
 
 </navigation>
