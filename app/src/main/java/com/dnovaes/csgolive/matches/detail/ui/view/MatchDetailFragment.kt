@@ -8,6 +8,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.dnovaes.csgolive.R
 import com.dnovaes.csgolive.common.ui.views.BaseFragment
@@ -16,13 +18,13 @@ import com.dnovaes.csgolive.common.utilities.extensions.getMatchTimeLabel
 import com.dnovaes.csgolive.databinding.FragmentMatchDetailBinding
 import com.dnovaes.csgolive.matches.common.data.model.MatchDetail
 import com.dnovaes.csgolive.matches.common.data.model.MatchOpponentGroupResponse
+import com.dnovaes.csgolive.matches.common.data.model.MatchPlayerResponse
 import com.dnovaes.csgolive.matches.common.data.model.getImageUrlOrNull
 import com.dnovaes.csgolive.matches.common.data.model.getItemNameOrDefault
 import com.dnovaes.csgolive.matches.common.ui.model.Matches
 import com.dnovaes.csgolive.matches.common.ui.view.MatchesViewModel
-import com.dnovaes.csgolive.matches.summary.ui.model.isDoneLoadingMatchDetail
-import com.dnovaes.csgolive.matches.summary.ui.model.isProcessingLoadMatchDetail
-import com.dnovaes.csgolive.matches.summary.ui.model.isStartLoadMatchDetail
+import com.dnovaes.csgolive.matches.detail.ui.model.isDoneLoadingMatchDetail
+import com.dnovaes.csgolive.matches.detail.ui.model.isProcessingLoadMatchDetail
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -43,6 +45,7 @@ class MatchDetailFragment : BaseFragment<FragmentMatchDetailBinding>() {
         super.onViewCreated(view, savedInstanceState)
         setObservers()
         bindElements()
+        viewModel.loadMatchDetail(args.matchId)
     }
 
     private fun setObservers() {
@@ -59,6 +62,7 @@ class MatchDetailFragment : BaseFragment<FragmentMatchDetailBinding>() {
     private fun bindElements() {
         binding.matchDetailBtBack.setOnClickListener {
             findNavController().popBackStack()
+            viewModel.userLeftMatchDetailScreen()
         }
     }
 
@@ -75,12 +79,14 @@ class MatchDetailFragment : BaseFragment<FragmentMatchDetailBinding>() {
 
     private val matchDetailObserver: Observer<UIViewState<MatchDetail>> = Observer { modelState ->
         when {
-            modelState.isStartLoadMatchDetail() -> viewModel.loadMatchDetail(args.matchId)
             modelState.isProcessingLoadMatchDetail() -> {
                 showLoadingSpinner()
             }
             modelState.isDoneLoadingMatchDetail() -> {
                 hideLoadingSpinner()
+                modelState.result?.let {matchDetail ->
+                    bindPlayersData(matchDetail.players)
+                }
             }
         }
     }
@@ -115,5 +121,33 @@ class MatchDetailFragment : BaseFragment<FragmentMatchDetailBinding>() {
         } ?: run {
             binding.matchDetailTitle.text = leagueName
         }
+    }
+
+    private fun bindPlayersData(players: List<MatchPlayerResponse>) {
+        val slugLeft = "team1"
+        bindTeam(
+            players.filter { it.slug == slugLeft },
+            R.layout.recycler_view_match_detail_player_item_left,
+            binding.team1RecyclerView
+        )
+        val slugRight = "team2"
+        bindTeam(
+            players.filter { it.slug == slugRight },
+            R.layout.recycler_view_match_detail_player_item_right,
+            binding.team2RecyclerView
+        )
+    }
+
+    private fun bindTeam(
+        playersTeam1: List<MatchPlayerResponse>,
+        layoutId: Int,
+        recyclerView: RecyclerView
+    ) {
+        val matchDetailPlayersAdapter = MatchDetailPlayersAdapter(
+            playersTeam1,
+            layoutId
+        )
+        recyclerView.adapter = matchDetailPlayersAdapter
+        recyclerView.layoutManager = LinearLayoutManager(this.context)
     }
 }

@@ -19,7 +19,7 @@ data class MatchPlayerResponse(
     @SerialName("first_name")
     val firstName: String,
     @SerialName("last_name")
-    val lastName: String,
+    val lastName: String?,
     @SerialName("name")
     val nickName: String,
     val slug: String,

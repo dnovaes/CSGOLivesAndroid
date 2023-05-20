@@ -10,12 +10,14 @@ import com.dnovaes.csgolive.matches.common.data.model.MatchDetail
 import com.dnovaes.csgolive.matches.common.data.model.MatchPlayerResponse
 import com.dnovaes.csgolive.matches.common.data.model.MatchResponse
 import com.dnovaes.csgolive.matches.common.ui.model.Matches
+import com.dnovaes.csgolive.matches.detail.ui.model.MatchDetailUIProcess
 import com.dnovaes.csgolive.matches.summary.data.MatchesRepository
 import com.dnovaes.csgolive.matches.summary.ui.model.MatchSummaryUIDataProcess
-import com.dnovaes.csgolive.matches.summary.ui.model.asLoadedMatchDetail
+import com.dnovaes.csgolive.matches.detail.ui.model.asLoadedMatchDetail
 import com.dnovaes.csgolive.matches.summary.ui.model.asLoadedSummaryData
 import com.dnovaes.csgolive.matches.summary.ui.model.asLoadedSummaryDataFromPage
-import com.dnovaes.csgolive.matches.summary.ui.model.asProcessingMatchDetail
+import com.dnovaes.csgolive.matches.detail.ui.model.asProcessingMatchDetail
+import com.dnovaes.csgolive.matches.detail.ui.model.asResetLoadMatchDetail
 import com.dnovaes.csgolive.matches.summary.ui.model.asProcessingSummaryData
 import com.dnovaes.csgolive.matches.summary.ui.model.asProcessingSummaryDataFromPage
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,7 +40,7 @@ class MatchesViewModel @Inject constructor(
     val matchesLiveData: LiveData<UIViewState<Matches>> = _matchesLiveData
 
     private var matchDetailState = UIViewState<MatchDetail>(
-        process = MatchSummaryUIDataProcess.LOAD_MATCH_DETAIL,
+        process = MatchDetailUIProcess.LOAD_MATCH_DETAIL,
         state = UIDataState.STARTED,
         result = null
     )
@@ -135,25 +137,35 @@ class MatchesViewModel @Inject constructor(
         MatchDetail(
             opponents = emptyList(),
             players = listOf(
-                MatchPlayerResponse(
-                    id = 1,
-                    imageUrl = null,
-                    firstName = "Eiichiro",
-                    lastName = "Oda",
-                    nickName = "Yfful",
-                    slug = "Mock"
-                ),
-                MatchPlayerResponse(
-                    id = 2,
-                    imageUrl = null,
-                    firstName = "Akira",
-                    lastName = "Toryama",
-                    nickName = "Ukog",
-                    slug = "Mock"
-                ),
+                getFixturePlayer("Yfful", "Eiichiro", "Oda", "team1"),
+                getFixturePlayer("Player2", "Nome", "Jogador", "team1"),
+                getFixturePlayer("Player3", "Nome", "Jogador", "team1"),
+                getFixturePlayer("Player4", "Nome", "Jogador", "team1"),
+                getFixturePlayer("Player5", "Nome", "Jogador", "team1"),
+                getFixturePlayer("Ukog", "Akira", "Toryama", "team2"),
+                getFixturePlayer("Player2", "Nome", "Jogador", "team2"),
+                getFixturePlayer("Player3", "Nome", "Jogador", "team2"),
+                getFixturePlayer("Player4", "Nome", "Jogador", "team2"),
+                getFixturePlayer("Player5", "Nome", "Jogador", "team2"),
             )
         )
     )
+
+    private fun getFixturePlayer(
+        nick: String,
+        firstName: String,
+        lastName: String? = null,
+        slug: String,
+    ): MatchPlayerResponse {
+        return MatchPlayerResponse(
+            id = Math.random().toInt(),
+            imageUrl = null,
+            firstName = firstName,
+            lastName = lastName,
+            nickName = nick,
+            slug = slug
+        )
+    }
 
     private fun handleMatchResponse(response: Result<MatchDetail>) {
         response.getOrNull()?.let { matchDetail ->
@@ -162,5 +174,12 @@ class MatchesViewModel @Inject constructor(
                 .withResult(matchDetail)
             _matchDetailLiveData.postValue(matchDetailState)
         }
+    }
+
+    fun userLeftMatchDetailScreen() {
+        matchDetailState = matchDetailState
+            .asResetLoadMatchDetail()
+            .withResult(null)
+        _matchDetailLiveData.postValue(matchDetailState)
     }
 }
