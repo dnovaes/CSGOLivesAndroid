@@ -1,12 +1,10 @@
 package com.dnovaes.csgolive.matches.summary.data
 
-import com.dnovaes.csgolive.R
 import com.dnovaes.csgolive.common.data.models.DispatcherInterface
 import com.dnovaes.csgolive.common.data.remote.PandaScoreAPIInterface
 import com.dnovaes.csgolive.matches.common.data.model.MatchDetail
 import com.dnovaes.csgolive.matches.common.data.model.MatchResponse
 import com.dnovaes.csgolive.matches.common.data.model.TeamInfoResponse
-import com.dnovaes.csgolive.matches.common.ui.model.UIError
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn

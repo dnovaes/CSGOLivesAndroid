@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -45,6 +45,7 @@ class MatchDetailFragment : BaseFragment<FragmentMatchDetailBinding>() {
         super.onViewCreated(view, savedInstanceState)
         setObservers()
         bindElements()
+        handleBackClick()
         val teamIds = listOf(args.team1, args.team2)
         viewModel.loadMatchDetail(teamIds)
     }
@@ -62,8 +63,14 @@ class MatchDetailFragment : BaseFragment<FragmentMatchDetailBinding>() {
 
     private fun bindElements() {
         binding.matchDetailBtBack.setOnClickListener {
-            findNavController().popBackStack()
+            goBack()
             viewModel.userLeftMatchDetailScreen()
+        }
+    }
+
+    private fun handleBackClick() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            goBack()
         }
     }
 
@@ -85,6 +92,12 @@ class MatchDetailFragment : BaseFragment<FragmentMatchDetailBinding>() {
             }
             modelState.isDoneLoadingMatchDetail() -> {
                 hideLoadingSpinner()
+                modelState.error?.let {
+                    showFailureSnackBar(it) {
+                        viewModel.errorDetailPresented()
+                        goBack()
+                    }
+                }
                 modelState.result?.let { matchDetail ->
                     bindPlayersData(matchDetail.team1.players, matchDetail.team2.players)
                 }

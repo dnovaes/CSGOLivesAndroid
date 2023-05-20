@@ -1,5 +1,6 @@
 package com.dnovaes.csgolive.matches.common.ui.view
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -74,10 +75,14 @@ class MatchesViewModel @Inject constructor(
                 .asLoadedSummaryData()
                 .withResult(matches)
             _matchesLiveData.postValue(matchState)
+        } ?: run {
+            response.exceptionOrNull()?.let {
+                postMatchSummaryLoadError(it)
+            } ?: postMatchSummaryLoadError()
         }
-    }
+}
 
-    fun loadsMoreSummaryMatchesFromPage() {
+fun loadsMoreSummaryMatchesFromPage() {
         matchState.result?.let { modelState ->
             matchState = matchState
                 .asProcessingSummaryDataFromPage()
@@ -111,13 +116,18 @@ class MatchesViewModel @Inject constructor(
                     .asLoadedSummaryDataFromPage()
                     .withResult(newModel)
                 _matchesLiveData.postValue(matchState)
-            } ?: run {
-                postMatchSummaryLoadError()
             }
+        } ?: run {
+            response.exceptionOrNull()?.let {
+                postMatchSummaryLoadError(it)
+            } ?: postMatchSummaryLoadError()
         }
     }
 
-    private fun postMatchSummaryLoadError() {
+    private fun postMatchSummaryLoadError(throwable: Throwable? = null) {
+        throwable?.let {
+            Log.e("ERROR", "${throwable.cause}, ${throwable.message}, ${throwable.stackTrace[0]}")
+        }
         matchState = matchState
             .asLoadedSummaryData()
             .withResult(null)
@@ -159,10 +169,17 @@ class MatchesViewModel @Inject constructor(
                     .withResult(newModel)
                 _matchDetailLiveData.postValue(matchDetailState)
             }
+        } ?: run {
+            response.exceptionOrNull()?.let {
+                postMatchDetailLoadError(it)
+            } ?: postMatchDetailLoadError()
         }
     }
 
-    private fun postMatchDetailLoadError() {
+    private fun postMatchDetailLoadError(throwable: Throwable? = null) {
+        throwable?.let {
+            Log.e("ERROR", "${throwable.cause}, ${throwable.message}, ${throwable.stackTrace[0]}")
+        }
         matchDetailState = matchDetailState
             .asLoadedMatchDetail()
             .withResult(null)
@@ -174,6 +191,12 @@ class MatchesViewModel @Inject constructor(
         matchDetailState = matchDetailState
             .asResetLoadMatchDetail()
             .withResult(null)
+        _matchDetailLiveData.postValue(matchDetailState)
+    }
+
+    fun errorDetailPresented() {
+        matchDetailState = matchDetailState
+            .withError(null)
         _matchDetailLiveData.postValue(matchDetailState)
     }
 }

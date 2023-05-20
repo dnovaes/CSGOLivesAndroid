@@ -54,6 +54,9 @@ class MatchesSummaryFragment : BaseFragment<FragmentMatchesBinding>() {
             modelState.isDoneLoadingSummaryDataFromPage() -> {
                 binding.summarySwipeRefreshLayout.isRefreshing = false
                 hideLoadingSpinner()
+                modelState.error?.let {
+                    showFailureSnackBar(it)
+                }
                 modelState.result?.let { matches ->
                     updatesRecyclerView(matches.data)
                 }
