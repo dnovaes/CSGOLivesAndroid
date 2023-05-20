@@ -10,10 +10,10 @@ data class TeamPlayerResponse(
     @SerialName("image_url")
     val imageUrl: String?,
     @SerialName("first_name")
-    val firstName: String,
+    val firstName: String?,
     @SerialName("last_name")
     val lastName: String?,
     @SerialName("name")
-    val nickName: String,
+    val nickName: String?,
     val slug: String,
 )
