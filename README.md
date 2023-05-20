@@ -10,7 +10,7 @@ PandaScore API: `https://developers.pandascore.co/reference/get_csgo_matches`
 
 <img width="294" alt="image" src="https://github.com/dnovaes/CSGOLivesAndroid/assets/3251916/28fb4f64-28c1-48ea-a6d0-ba0abf9aedc6">
 
-<img width="294" alt="image" src="https://github.com/dnovaes/CSGOLivesAndroid/assets/3251916/84cc6ca7-15b5-4324-84f9-a6b0e5fed5b5">
+<img width="293" alt="image" src="https://github.com/dnovaes/CSGOLivesAndroid/assets/3251916/97a7a8e4-8106-4c5f-af88-cb1c308dca0e">
 
 ### Installation
 To get started with the CSGO App, follow these simple steps:
@@ -27,4 +27,4 @@ PANDASCORE_API_KEY=TypEPnYourCoDeTOKENHeRe
 The CSGO App is released under the MIT License. Feel free to use, modify, and distribute the app as per the terms of the license.
 
 ### Contact
-If you have any questions or suggestions regarding the CSGO App, feel free to reach out using this github on my email on my github profile. I'd love to hear from you!
+If you have any questions or suggestions regarding the CSGO App, feel free to reach out using this github or from my email on github profile. I'd love to hear from you!
