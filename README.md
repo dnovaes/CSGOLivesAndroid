@@ -6,11 +6,11 @@ PandaScore API: `https://developers.pandascore.co/reference/get_csgo_matches`
 
 ### Preview:
 
-<img width="272" alt="image" src="https://github.com/dnovaes/CSGOLivesAndroid/assets/3251916/8d33824b-e4af-4af7-8336-14a16255cc88">
+<img width="271" alt="image" src="https://github.com/dnovaes/CSGOLivesAndroid/assets/3251916/ac7ecd73-2968-4d88-91a0-fa9d1cc2c589">
 
-<img width="271" alt="image" src="https://github.com/dnovaes/CSGOLivesAndroid/assets/3251916/74445a1c-6ac5-4517-b8ca-6fcbd804d0ec">
+<img width="272" alt="image" src="https://github.com/dnovaes/CSGOLivesAndroid/assets/3251916/c15b653a-5fc6-4ab0-a408-408332850f2b">
 
-<img width="275" alt="image" src="https://github.com/dnovaes/CSGOLivesAndroid/assets/3251916/d6491c76-3a2d-4500-a58f-5cb1219ec937">
+<img width="270" alt="image" src="https://github.com/dnovaes/CSGOLivesAndroid/assets/3251916/28de974e-b078-4182-b7b8-98acee702f2b">
 
 ### Installation
 To get started with the CSGO App, follow these simple steps:
